@@ -1,0 +1,71 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "settings": {
+        "import/resolver": {
+          "node": {
+            "paths": ["src"]
+          }
+        }
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:import/typescript"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint",
+        "unused-imports"
+    ],
+    "rules": {
+        "@typescript-eslint/no-use-before-define": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/type-annotation-spacing": ["error", {
+            "before": false,
+            "after": true,
+            "overrides": {
+              "arrow": { "before": true, "after": true }
+            }
+          }],
+        "no-console": "error",
+        "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0, "maxBOF": 0 }],
+        "no-multi-spaces": "error",
+        "no-warning-comments": ["error", { "terms": ["console.log"] }],
+        "comma-dangle": ["error", "never"],
+        "camelcase": ["warn", { "properties": "always" }],
+        "array-bracket-spacing": ["error", "never"],
+        "comma-spacing": ["error", { "before": false, "after": true }],
+        "indent": ["error", 2],
+        "quotes": ["error", "single"],
+        "object-curly-spacing": ["error", "always"],
+        "newline-after-var": ["error", "always"],
+        "curly": "error",
+        "keyword-spacing": "error",
+        "space-in-parens": ["error", "never"],
+        
+        "space-before-function-paren": ["error", {
+        "anonymous": "always",
+        "named": "never",
+        "asyncArrow": "always"
+        }],
+        "unused-imports/no-unused-imports": "error",
+        "unused-imports/no-unused-vars": [
+            "warn",
+            { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+        ]
+    }
+}
