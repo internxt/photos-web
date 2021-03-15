@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
 import './App.css'
 import Home from './screens/Home'
