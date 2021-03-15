@@ -1,0 +1,43 @@
+@font-face {
+  font-family: 'CerebriSans-Regular';
+  src: url(./assets/fonts/CerebriSans-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'CerebriSans-Medium';
+  src: url(./assets/fonts/CerebriSans-Medium.ttf);
+}
+
+@font-face {
+  font-family: 'CerebriSans-SemiBold';
+  src: url(./assets/fonts/CerebriSans-SemiBold.ttf);
+}
+
+@font-face {
+  font-family: 'CerebriSans-Bold';
+  src: url(./assets/fonts/CerebriSans-Bold.ttf);
+}
+
+@font-face {
+  font-family: 'CerebriSans-Book';
+  src: url(./assets/fonts/CerebriSans-Book.ttf);
+}
+
+@font-face {
+  font-family: 'Gotham-Book-Regular';
+  src: url(./assets/fonts/Gotham-Book-Regular.otf);
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
