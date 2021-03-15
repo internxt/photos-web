@@ -6,6 +6,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import { useHistory } from 'react-router-dom'
 import { useState } from 'react';
 import './login.scss'
+
 export interface ILogin {
 
 }
