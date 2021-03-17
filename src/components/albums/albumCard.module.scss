@@ -1,48 +1,71 @@
-.mainContainer {
-  width: 300px;
-  height: 200px;
-}
-
 .card {
   background-color: #fff;
   display: flex;
-  flex-direction: row;
-  padding-bottom: 1px;
-  padding-left: 6px;
-  padding-right: 1px;
-  padding-top: 6px;
-  margin-right: 24px;
-}
-
-.boxShadow {
-  -webkit-box-shadow: 0px 6px 9px 4px rgba(150,150,150,1);
-  -moz-box-shadow: 0px 6px 9px 4px rgba(150,150,150,1);
-  box-shadow: 0px 6px 9px 4px rgba(150,150,150,1);
-}
-.albumCover {
-  width: 300px;
-}
-
-.bigImageContainer {
-  width: 121px;
-  height: 121px;
+  min-width: 411px;
+  max-height: 249px;
   border: 1px solid;
+  margin-right: 24px;
+  border-radius: 6px;
+  padding: 4px 0px 4px 4px;
+  overflow: hidden;
 }
 
-.bigImage {
-  max-width: 100%;
-  height: auto;
-  object-fit: cover;
+.albumCover {
+  display: flex;
+  flex-direction: column;
 }
 
-.smallImageContainer {
-  width: 121px;
-  height: 60px;
-  border: 1px solid black;
-  margin-top: 2px;
+.primaryCoverPhoto {
+  height: 158px;
+  width: 158px;
+  border: 1px solid;
+  border-top-left-radius: 6px;
 }
 
-.image {
-  width: 58px;
-  height: 58px;
+.secondaryCoverPhotos {
+  display: flex;
+  flex-direction: row;
+}
+
+.smallPhoto {
+  width: 77px;
+  height: 77px;
+  border: 1px solid;
+  margin: 4px 0 0 0;
+}
+
+.roundedBottomLeft {
+  border-bottom-left-radius: 6px;
+}
+
+.photosList {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  overflow: auto;
+  /* this will hide the scrollbar in mozilla based browsers */
+  overflow: -moz-scrollbars-none;
+  /* this will hide the scrollbar in internet explorers */
+  -ms-overflow-style: none;
+}
+
+.photoList::-webkit-scrollbar {
+  display: none;
+  width: 0 !important;
+}
+
+.photoContainer {
+  display: flex;
+  flex-wrap: wrap;
+  width: 77px;
+  min-width: 77px;
+  height: 77px;
+  border: 1px solid;
+  margin: 0 0 4px 4px;
+}
+
+.photo {
+  max-width: 77px;
+  max-height: 77px;
+  border: 1px solid;
 }

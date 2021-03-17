@@ -1,6 +1,6 @@
 import styles from './albumCard.module.scss'
-import bigImg from '../../assets/images/2.jpg'
-import Image from 'react-bootstrap/Image';
+import { useState } from 'react';
+import FlatList from 'flatlist-react'
 
 export interface IAlbum {
   title: string,
@@ -32,26 +32,30 @@ interface AlbumCardProps {
 }
 
 const AlbumCard = (props: AlbumCardProps) => {
-  return (
-    <div className={`${styles.card} ${styles.boxShadow}`}>
-      <div className={`${styles.albumCover}`}>
-        <div className={`${styles.bigImageContainer}`}>
+  const [photos, setPhotos] = useState(props.album.photos)
 
+  return (
+    <div className={`${styles.card}`}>
+      <div className={`${styles.albumCover}`}>
+        <div className={`${styles.primaryCoverPhoto}`}>
+          big chungus
         </div>
 
-        <div className={`${styles.smallImageContainer}`}>
-          <div className={`${styles.image}`}>
-
+        <div className={`${styles.secondaryCoverPhotos}`}>
+          <div className={`${styles.smallPhoto} ${styles.roundedBottomLeft} mr-1`}>
+            small chungus
           </div>
 
-          <div className={`${styles.image}`}>
-
+          <div className={`${styles.smallPhoto}`}>
+            small chungus
           </div>
         </div>
       </div>
 
-      <div>
-
+      <div className={`${styles.photosList}`}>
+        {
+          photos.map(photo => (<div className={`${styles.photoContainer}`}>hola</div>))
+        }
       </div>
     </div>
   )
