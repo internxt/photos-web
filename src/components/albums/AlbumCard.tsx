@@ -1,6 +1,5 @@
 import styles from './albumCard.module.scss'
 import { useState } from 'react';
-import FlatList from 'flatlist-react'
 
 export interface IAlbum {
   title: string,
@@ -54,7 +53,9 @@ const AlbumCard = (props: AlbumCardProps) => {
 
       <div className={`${styles.photosList}`}>
         {
-          photos.map(photo => (<div className={`${styles.photoContainer}`}>hola</div>))
+          photos.map(photo => (
+            <img className={`${styles.photo}`} src={photo.localUri} />
+          ))
         }
       </div>
     </div>
