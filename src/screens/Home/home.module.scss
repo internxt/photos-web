@@ -1,0 +1,43 @@
+.mainContainer {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  border-width: 2rem;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.titleContainer {
+  display: flex;
+  padding-left: 32px;
+  padding-right: 32px;
+  justify-content: space-between;
+}
+
+.title {
+
+}
+
+.filter {
+
+}
+
+.albumCardList {
+  border: 1px solid;
+}
+
+.albums {
+  background-color: red;
+}
+
+.all {
+  background-color: yellow;
+}
+
+.deleted {
+  background-color: green;
+}
