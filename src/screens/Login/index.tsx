@@ -294,7 +294,7 @@ const Login = (props: ILogin) => {
 
               <Form.Row className="form-register-submit">
                 <Form.Group as={Col}>
-                  <Button className="on btn-block __btn-new-button" disabled={!isValid || isLogging} type="submit">{isLogging ? <Spinner animation="border" variant="light" style={{ fontSize: 1, width: '1rem', height: '1rem' }} /> : 'Sign in'}</Button>
+                  <Button className="on btn-block __btn-new-button" disabled={!isValid || isLogging} onClick={() => history.push('/home')} >{isLogging ? <Spinner animation="border" variant="light" style={{ fontSize: 1, width: '1rem', height: '1rem' }} /> : 'Sign in'}</Button>
                 </Form.Group>
               </Form.Row>
             </Form>
@@ -303,7 +303,7 @@ const Login = (props: ILogin) => {
 
         <Container className="login-container-box-forgot-password">
           <p onClick={(e: any) => {
-            history.push('/remove');
+            history.push('/remove')
           }}>Forgot your password?</p>
         </Container>
       </div>
