@@ -76,21 +76,31 @@ const Home = (props: IHome) => {
 
   return (
     <div className={`${styles.mainContainer}`}>
-      <div className={`${styles.container} ${styles.albums} pl-2 pr-2`}>
+      <div className={`${styles.container} ${styles.albums}`}>
         <div className={`${styles.titleContainer}`}>
           <span className={`${styles.title}`}>Albums</span>
 
           <span className={`${styles.filter}`}>Filter</span>
         </div>
 
-        <div className={`${styles.albumCardList} list-group list-group-horizontal overflow-auto`}>
-        {
-          albums.map(album => (<AlbumCard album={album} key={Math.random() * 10000000} />))
-        }
+        <div className={`${styles.list}`}>
+          { albums.map(album => (<AlbumCard album={album} key={Math.random() * 10000000} />)) }
         </div>
       </div>
 
-      <div className={`${styles.container} ${styles.all}`}>all photos</div>
+      <div className={`${styles.container} ${styles.all}`}>
+        <div className={`${styles.titleContainer}`}>
+          <span className={`${styles.title}`}>All photos</span>
+
+          <span className={`${styles.filter}`}>Filter</span>
+        </div>
+
+        <div className={`${styles.list}`}>
+          {
+            albums.map(album => album.photos.map(photo => <img className={`${styles.photo}`} src={photo.localUri} key={Math.random() * 10000000} />))
+          }
+        </div>
+      </div>
 
       <div className={`${styles.container} ${styles.deleted}`}>deleted photos</div>
     </div>

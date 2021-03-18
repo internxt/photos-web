@@ -8,6 +8,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  padding-top: 20px 8px 0;
 }
 
 .titleContainer {
@@ -35,7 +36,10 @@
   width: 50px;
 }
 
-.albumCardList {
+.list {
+  display: flex;
+  flex-direction: row;
+  overflow: auto;
   padding: 1rem 1rem 0;
 }
 
@@ -49,4 +53,11 @@
 
 .deleted {
   background-color: green;
+}
+
+.photo {
+  min-width: 206px;
+  height: 206px;
+  object-fit: cover;
+  margin-right: 16px;
 }
