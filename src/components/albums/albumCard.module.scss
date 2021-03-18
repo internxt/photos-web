@@ -3,11 +3,20 @@
   display: flex;
   min-width: 411px;
   max-height: 249px;
-  border: 1px solid;
   margin-right: 24px;
+  margin-bottom: 8px;
   border-radius: 6px;
-  padding: 4px 0px 4px 4px;
+  padding: 4px 0 0 4px;
   overflow: hidden;
+
+  -webkit-box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.23);
+  -moz-box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.23);
+  box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.23);
+}
+
+.card:hover {
+  cursor: pointer;
+  opacity: 0.6;
 }
 
 .albumCover {
@@ -18,8 +27,9 @@
 .primaryCoverPhoto {
   height: 158px;
   width: 158px;
-  border: 1px solid;
+  object-fit: cover;
   border-top-left-radius: 6px;
+  margin: 0 4px 4px 0;
 }
 
 .secondaryCoverPhotos {
@@ -30,12 +40,19 @@
 .smallPhoto {
   width: 77px;
   height: 77px;
-  border: 1px solid;
   margin: 4px 0 0 0;
 }
 
 .roundedBottomLeft {
   border-bottom-left-radius: 6px;
+}
+
+.roundedTopRight {
+  border-top-right-radius: 6px;
+}
+
+.roundedBottomRight {
+  border-bottom-right-radius: 6px;
 }
 
 .photosList {
@@ -45,15 +62,30 @@
   overflow-y: auto;
 }
 
-.photoList::-webkit-scrollbar {
-  width: 1px;
-  height: 0px;
-}
-
 .photo {
   width: 77px;
   height: 77px;
   object-fit: cover;
-  border: 1px solid;
-  margin: 0 0 4px 4px;
+  margin: 0 4px 4px 0;
 }
+
+.emptyItem {
+  width: 77px;
+  height: 77px;
+  background-color: #F7F5F7;
+  margin: 0 4px 4px 0;
+}
+
+.albumTitle {
+  color: #2a2c35;
+  font-family: CerebriSans-Regular;
+  font-size: 22px;
+  letter-spacing: -0.14px;
+  margin: 0 0 0 18px;
+}
+
+.albumSubtitle {
+  color: #b5b5b5;
+  font-size: 16px;
+  margin-left: 8px
+};
