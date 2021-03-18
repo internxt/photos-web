@@ -84,7 +84,7 @@ const AlbumCard = (props: AlbumCardProps) => {
 
         <div className={`${styles.photosList}`}>
           { secondaryPhotos.map(renderItem) }
-          { emptySecondarySpaces.map(renderEmptyItem) }
+          { secondaryPhotos.length < 9 ? emptySecondarySpaces.map(renderEmptyItem) : null }
         </div>
       </div>
 
