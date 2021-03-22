@@ -1,27 +1,49 @@
 import AlbumCard, { IAlbum } from '../../components/albums/AlbumCard';
 import styles from './home.module.scss'
-import a from '../../assets/images/1.jpg'
-import b from '../../assets/images/2.jpg'
-import c from '../../assets/images/3.jpg'
-import d from '../../assets/images/4.jpg'
-import e from '../../assets/images/5.jpg'
-import f from '../../assets/images/6.jpg'
-import g from '../../assets/images/7.jpg'
-import h from '../../assets/images/8.jpg'
-import i from '../../assets/images/9.jpg'
-import j from '../../assets/images/10.jpg'
-import k from '../../assets/images/11.jpg'
-import l from '../../assets/images/12.jpg'
-import m from '../../assets/images/13.jpg'
-import n from '../../assets/images/14.jpg'
-import o from '../../assets/images/15.jpg'
-import { Grid } from 'react-virtualized'
+import a from '../../assets/images/1.webp'
+import b from '../../assets/images/2.webp'
+import c from '../../assets/images/3.webp'
+import d from '../../assets/images/4.webp'
+import e from '../../assets/images/5.webp'
+import f from '../../assets/images/6.webp'
+import g from '../../assets/images/7.webp'
+import h from '../../assets/images/8.webp'
+import i from '../../assets/images/9.webp'
+import j from '../../assets/images/10.webp'
+import k from '../../assets/images/11.webp'
+import l from '../../assets/images/12.webp'
+import m from '../../assets/images/13.webp'
+import n from '../../assets/images/14.webp'
+import o from '../../assets/images/15.webp'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { useState } from 'react';
 
 export interface IHome {
 
 }
 
+interface IPhoto {
+  bucketId: string,
+  fileId: string,
+  id: number,
+  userId: number,
+  createdAt: string,
+  updatedAt: string,
+  name: string,
+  hash: string,
+  size: 200,
+  type: string,
+  photosalbums: any,
+  localUri: string
+}
+
 const Home = (props: IHome) => {
+  const [hasMore, setHasMore] = useState(false)
+  const [photosToRender, setPhotosToRender] = useState<IPhoto[]>([])
+  const [initialIndex, setInitialIndex] = useState(0)
+  const [lastIndex, setLastIndex] = useState(10)
+  const [isDownloading, setIsDownloading] = useState(true)
+
   const WINDOW_WIDTH = window.innerWidth
 
   const albums: IAlbum[] = [
@@ -65,7 +87,7 @@ const Home = (props: IHome) => {
         { bucketId: '1', fileId: '1', id: 1, userId: 1, createdAt: '123', updatedAt: '123', name: 'image', hash: 'dq', size: 200, type: 'jpg', photosalbums: {}, localUri: o },
       ]
     },
-    { title: 'This not normal', photos: [{ bucketId: '1', fileId: '1', id: 1, userId: 1, createdAt: '123', updatedAt: '123', name: 'image', hash: 'd', size: 200, type: 'jpg', photosalbums: {}, localUri: '../../assets/images/5.jpg' }] },
+    { title: 'This not normal', photos: [{ bucketId: '1', fileId: '1', id: 1, userId: 1, createdAt: '123', updatedAt: '123', name: 'image', hash: 'd', size: 200, type: 'jpg', photosalbums: {}, localUri: '../../assets/images/5.webp' }] },
     {
       title: 'More random shit', photos: [
         { bucketId: '1', fileId: '1', id: 1, userId: 1, createdAt: '123', updatedAt: '123', name: 'image', hash: 'dr', size: 200, type: 'jpg', photosalbums: {}, localUri: e },
@@ -91,7 +113,7 @@ const Home = (props: IHome) => {
     },
   ]
 
-  const photos = [
+  const photos: IPhoto[] = [
     { bucketId: '1', fileId: '1', id: 1, userId: 1, createdAt: '123', updatedAt: '123', name: 'image', hash: 'j', size: 200, type: 'jpg', photosalbums: {}, localUri: j },
     { bucketId: '1', fileId: '1', id: 1, userId: 1, createdAt: '123', updatedAt: '123', name: 'image', hash: 'd', size: 200, type: 'jpg', photosalbums: {}, localUri: a },
     { bucketId: '1', fileId: '1', id: 1, userId: 1, createdAt: '123', updatedAt: '123', name: 'image', hash: 'a', size: 200, type: 'jpg', photosalbums: {}, localUri: b },
@@ -165,15 +187,37 @@ const Home = (props: IHome) => {
     { bucketId: '1', fileId: '1', id: 1, userId: 1, createdAt: '123', updatedAt: '123', name: 'image', hash: 'c', size: 200, type: 'jpg', photosalbums: {}, localUri: d },
   ]
 
-  const renderRow = (index: number, key: string) => {
-    return (<img className={`${styles.photo}`} src={photos[index].localUri} key={key} />)
+  /* const loadUploadedPhotos = async (matchImages?: any) => {
+    setIsDownloading(true);
+    getPreviews(matchImages).then(res => {
+      setUploadedPhotos(res)
+    }).then(() => {
+      setIsLoading(false)
+    }).catch(() => {
+    }).finally(() => {
+      setIsDownloading(false);
+    })
   }
 
-  const cellRenderer = (columnIndex: number, key: string, rowIndex: number,) => {
-    return (
-      <img key={key} className={styles.photo} src={photos[columnIndex].localUri} />
-    )
-  }
+  const getNextImages = (after?: string | undefined) => {
+    setIsLoading(true)
+    if (photos.length < 10) {
+      const lastindex = photos.length
+      const newPhotos = photos.slice(initialIndex, lastindex)
+
+      setPhotosToRender(newPhotos)
+    } else {
+      setHasMore(true)
+
+      const lastindex = lastIndex
+      const newPhotos = photos.slice(initialIndex, lastindex)
+
+      setInitialIndex(lastindex)
+      if (photos.length > initialIndex + 10) {
+
+      }
+    }
+  } */
 
   return (
     <div className={`${styles.mainContainer}`}>
@@ -197,16 +241,15 @@ const Home = (props: IHome) => {
         </div>
 
         <div className={`${styles.list}`}>
-          <Grid
-            cellRenderer={({ columnIndex, key, rowIndex }) => cellRenderer(columnIndex, key, rowIndex)}
-            columnCount={photos.length}
-            columnWidth={206}
-            height={206}
-            autoHeight={true}
-            rowCount={1}
-            rowHeight={206}
-            width={WINDOW_WIDTH} />
+          { photos.map(photo => <img src={photo.localUri} className={styles.photo} />) }
         </div>
+        {/* <InfiniteScroll
+          dataLength={photos.length}
+          next={getNextImages}
+          hasMore={hasMore}
+        >
+
+        </InfiniteScroll> */}
       </div>
 
       <div className={`${styles.container} ${styles.deleted}`}>deleted photos</div>
