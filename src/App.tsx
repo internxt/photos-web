@@ -31,7 +31,7 @@ function App() {
 
         <Route path='/register' render={() => <Register />} />
 
-        <Route path='/photos' render={() => <Home />} />
+        <Route path='/app' render={() => <Home />} />
 
         <Route exact path='/'>
           <Redirect to="/login" />
