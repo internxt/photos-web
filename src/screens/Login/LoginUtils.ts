@@ -4,7 +4,7 @@ import { getHeaders } from "../../lib/utils/auth";
 import { initializeUser } from "../../lib/services/auth.service";
 import Settings from "../../lib/utils/settings";
 import { IRegister } from './New'
-import { IFormInputs } from './index' 
+import { IFormInputs } from './index'
 const bip39 = require('bip39')
 
 export const validateLoginForm = (formInputValues: IFormInputs) => {
@@ -32,8 +32,8 @@ export const validateRegisterFormPart1 = (register: IRegister) => {
     return false
   }
 
-  if (register.name.length < 1 && register.lastname.length < 1) {isValid = false}
-  if (register.email.length < 5 || !validateEmail(register.email)) {isValid = false}
+  if (register.name.length < 1 && register.lastname.length < 1) { isValid = false }
+  if (register.email.length < 5 || !validateEmail(register.email)) { isValid = false }
 
   return isValid
 }
@@ -122,4 +122,52 @@ export const updateInfo = (register: IRegister) => {
       Settings.set('xUser', JSON.stringify(xUser))
     })
   })
+}
+
+async function photosUserData(): Promise<any> {
+  const headers = await getHeaders(true, true)
+
+  return fetch(`${process.env.REACT_APP_API_URL}/api/photos/user`, {
+    method: 'GET',
+    headers
+  }).then(res => {
+    if (res.status !== 200) {
+      throw Error();
+    }
+    return res.json()
+  })
+}
+
+async function isUserInitialized() {
+  return photosUserData()
+    .then((res) => {
+      if (!res.rootPreviewId || !res.rootAlbumId) {
+        return false;
+      }
+      return true;
+    })
+    .catch(() => false);
+}
+
+export async function initializeUserPhotos(): Promise<any> {
+  const headers = await getHeaders(true, true)
+
+  return fetch(`${process.env.REACT_APP_API_URL}/api/photos/initialize`, {
+    method: 'GET',
+    headers
+  }).then(res => res.json())
+}
+
+export async function initUser(): Promise<void> {
+  const xPhotos = await localStorage.getItem('xPhotos');
+
+  if (xPhotos) return
+
+  const isInitialized = await isUserInitialized()
+
+  if (!isInitialized) await initializeUserPhotos()
+
+  const infoUserPhoto = await photosUserData();
+
+  await localStorage.setItem('xPhotos', JSON.stringify(infoUserPhoto))
 }

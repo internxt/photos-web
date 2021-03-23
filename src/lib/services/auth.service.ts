@@ -1,8 +1,9 @@
+import { initializeUserPhotos } from "../../screens/Login/LoginUtils";
 import { getHeaders } from "../utils/auth";
 import Settings from "../utils/settings";
 
-export async function initializeUser(email: string, mnemonic: string, password:string) {
-  return fetch('/api/initialize', {
+export async function initializeUser(email: string, mnemonic: string, password :string) {
+  return fetch(`${process.env.REACT_APP_API_URL}/api/initialize`, {
     method: 'POST',
     headers: getHeaders(true, true),
     body: JSON.stringify({
@@ -13,8 +14,10 @@ export async function initializeUser(email: string, mnemonic: string, password:s
     if (res.status !== 200) {
       throw Error(res.statusText);
     }
-    return res.json();
-  });
+
+    initializeUserPhotos()
+    return res.json()
+  })
 }
 
 export function isUserSignedIn() {

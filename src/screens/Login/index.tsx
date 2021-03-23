@@ -4,9 +4,9 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col'
 import Spinner from 'react-bootstrap/Spinner'
 import { useHistory } from 'react-router-dom'
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import './login.scss'
-import { validateLoginForm, validateEmail, validate2FA } from './LoginUtils';
+import { validateLoginForm, validateEmail, validate2FA, initUser } from './LoginUtils';
 import { getHeaders } from '../../lib/utils/auth';
 import { toast } from 'react-toastify';
 import { generateNewKeys } from '../../lib/services/pgp.service';
@@ -37,7 +37,7 @@ const Login = (props: ILogin) => {
   const [isLogging, setIsLogging] = useState(false)
   const [twoFactorCode, setTwoFactorCode] = useState('')
   const [showTwoFactor, setShowTwoFactor] = useState(false)
-  const [user, setUser] = useState<any>({})
+  const [xuser, setxUser] = useState<any>({})
   const [registerCompleted, setRegisterCompleted] = useState(true)
   const [isTeam, setIsTeam] = useState(true)
   const history = useHistory()
@@ -53,8 +53,8 @@ const Login = (props: ILogin) => {
     };
   }
 
-  const check2FANeeded = () => {
-    fetch('/api/login', {
+  const check2FANeeded = (): Promise<any> => {
+    return fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
       method: 'POST',
       headers: getHeaders(true, true),
       body: JSON.stringify({ email: formInputValues.email })
@@ -62,10 +62,10 @@ const Login = (props: ILogin) => {
       const data = await res.json()
 
       if (res.status !== 200) {
-        window.analytics.track('user-signin-attempted', {
+        /* window.analytics.track('user-signin-attempted', {
           status: 'error',
           msg: data.error ? data.error : 'Login error'
-        })
+        }) */
         throw new Error(data.error ? data.error : 'Login error')
       }
 
@@ -81,10 +81,10 @@ const Login = (props: ILogin) => {
         history.push(`/activate/${formInputValues.email}`)
       } else {
         setIsLogging(false)
-        window.analytics.track('user-signin-attempted', {
+        /* window.analytics.track('user-signin-attempted', {
           status: 'error',
           msg: err.message
-        })
+        }) */
         toast.warn(`"${err}"`)
       }
     })
@@ -92,7 +92,7 @@ const Login = (props: ILogin) => {
 
   const doLogin = async () => {
     // Proceed with submit
-    fetch('/api/login', {
+    fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
       method: 'post',
       headers: getHeaders(false, false),
       body: JSON.stringify({ email: formInputValues.email })
@@ -115,7 +115,7 @@ const Login = (props: ILogin) => {
       const hashObj = passToHash({ password: formInputValues.password, salt });
       const encPass = encryptText(hashObj.hash);
 
-      return fetch('/api/access', {
+      return fetch(`${process.env.REACT_APP_API_URL}/api/access`, {
         method: 'post',
         headers: getHeaders(false, false),
         body: JSON.stringify({
@@ -130,10 +130,10 @@ const Login = (props: ILogin) => {
         return { res, data: await res.json() };
       }).then(res => {
         if (res.res.status !== 200) {
-          window.analytics.track('user-signin-attempted', {
+          /* window.analytics.track('user-signin-attempted', {
             status: 'error',
             msg: res.data.error ? res.data.error : 'Login error'
-          });
+          }); */
           throw new Error(res.data.error ? res.data.error : res.data);
         }
         return res.data;
@@ -143,14 +143,13 @@ const Login = (props: ILogin) => {
         const revocateKey = data.user.revocateKey;
 
         const privkeyDecrypted = Buffer.from(aes.decrypt(privateKey, formInputValues.password)).toString('base64');
-
-        analytics.identify(data.user.uuid, {
+        /* analytics.identify(data.user.uuid, {
           email: formInputValues.email,
           platform: 'web',
           referrals_credit: data.user.credit,
           referrals_count: Math.floor(data.user.credit / 5),
           createdAt: data.user.createdAt
-        });
+        }); */
 
         // Manage succesfull login
         const user = {
@@ -192,7 +191,7 @@ const Login = (props: ILogin) => {
           Settings.set('xTokenTeam', data.tokenTeam);
         }
 
-        window.analytics.identify(data.user.uuid, {
+        /* window.analytics.identify(data.user.uuid, {
           email: formInputValues.email,
           platform: 'web',
           referrals_credit: data.user.credit,
@@ -203,28 +202,34 @@ const Login = (props: ILogin) => {
             email: formInputValues.email,
             userId: user.uuid
           })
-        })
+        }) */
 
         setIsAuthenticated(true)
         setToken(data.token)
-        setUser(user)
+        setxUser(user)
         setRegisterCompleted(data.user.registerCompleted)
         setIsTeam(false)
-
-      }).catch(err => {
-        throw Error(`"${err.error ? err.error : err}"`);
-      });
+      })
+        .then(() => initUser())
+        .catch(err => {
+          throw Error(`"${err.error ? err.error : err}"`);
+        })
 
     }).catch(err => {
       console.error('Login error. ' + err.message);
       toast.warn('Login error');
-    }).finally(() => {
-      setIsLogging(false)
-    });
+    })
   }
 
   const handleChange = (event: any) => {
     setFormInputValues(prevState => ({ ...prevState, [event.target.id]: event.target.value }))
+  }
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    console.log('submit')
+    setIsLogging(true)
+    check2FANeeded()
   }
 
   useEffect(() => {
@@ -252,7 +257,7 @@ const Login = (props: ILogin) => {
   }, [formInputValues])
 
   useEffect(() => {
-    if (isAuthenticated && token && user) {
+    if (isAuthenticated && token && xuser) {
       const mnemonic = Settings.get('xMnemonic');
 
       if (!registerCompleted) {
@@ -262,7 +267,7 @@ const Login = (props: ILogin) => {
         history.push('/app');
       }
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated, xuser, token])
 
   if (!showTwoFactor) {
     return (
@@ -273,13 +278,12 @@ const Login = (props: ILogin) => {
 
             <div className="menu-box">
               <button className="on">Sign in</button>
-              <button className="off" onClick={(e: any) => { history.push('/new'); }}>Create account</button>
+              <a href='https://drive.internxt.com/new' target='_blank' >
+                <span className="off">Create account</span>
+              </a>
             </div>
 
-            <Form className="form-register" onSubmit={(e: FormEvent<HTMLFormElement>) => {
-              e.preventDefault()
-              setIsLogging(true)
-            }}>
+            <Form className="form-register" onSubmit={(e: FormEvent<HTMLFormElement>) => handleSubmit(e)}>
               <Form.Row>
                 <Form.Group as={Col} controlId="email">
                   <Form.Control placeholder="Email address" required type="email" name="email" autoComplete="username" value={formInputValues.email} onChange={handleChange} autoFocus />
@@ -294,7 +298,7 @@ const Login = (props: ILogin) => {
 
               <Form.Row className="form-register-submit">
                 <Form.Group as={Col}>
-                  <Button className="on btn-block __btn-new-button" disabled={!isValid || isLogging} onClick={() => history.push('/home')} >{isLogging ? <Spinner animation="border" variant="light" style={{ fontSize: 1, width: '1rem', height: '1rem' }} /> : 'Sign in'}</Button>
+                  <Button className="on btn-block __btn-new-button" disabled={!isValid || isLogging} type='submit' >{isLogging ? <Spinner animation="border" variant="light" style={{ fontSize: 1, width: '1rem', height: '1rem' }} /> : 'Sign in'}</Button>
                 </Form.Group>
               </Form.Row>
             </Form>
