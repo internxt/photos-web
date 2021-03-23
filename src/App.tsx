@@ -3,10 +3,10 @@ import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
 import './App.scss'
 import Home from './screens/Home'
 import Login from './screens/Login'
-import Register from './screens/Register'
 import { useEffect, useState } from 'react';
 import Settings from './lib/utils/settings';
 import { createObjectStore, putBulkValue } from './lib/utils/indexedDB';
+import New from './screens/Login/New';
 
 interface IUser {
 
@@ -117,7 +117,7 @@ function App() {
       <Switch>
         <Route path='/login' render={(props) => <Login isAuthenticated={isAuthenticated} handleKeySaved={handleKeySaved} />} />
 
-        <Route path='/register' render={() => <Register />} />
+        <Route exact path='/new' render={(props: any) => <New isNewUser={true} isAuthenticated={isAuthenticated} handleKeySaved={handleKeySaved} {...props} />} />
 
         <Route path='/app' render={() => <Home />} />
 
