@@ -278,9 +278,10 @@ const Login = (props: ILogin) => {
 
             <div className="menu-box">
               <button className="on">Sign in</button>
-              <a href='https://drive.internxt.com/new' target='_blank' >
+              <button className="off" onClick={(e: any) => { history.push('/new'); }}>Create account</button>
+              {/* <a href='https://drive.internxt.com/new' target='_blank' >
                 <span className="off">Create account</span>
-              </a>
+              </a> */}
             </div>
 
             <Form className="form-register" onSubmit={(e: FormEvent<HTMLFormElement>) => handleSubmit(e)}>
