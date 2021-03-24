@@ -17,6 +17,7 @@ import n from '../../assets/images/14.jpg'
 import o from '../../assets/images/15.jpg'
 import { useEffect, useState } from 'react';
 import { getAlbums } from './init';
+import Header from '../../layout/Header';
 
 export interface IHome {
 
@@ -118,6 +119,11 @@ const Home = (props: IHome) => {
 
   return (
     <div className={`${styles.mainContainer}`}>
+      <Header 
+        showFileButtons={true}
+        showSettingsButton={true}
+      />
+
       <div className={`${styles.container} ${styles.albums} pl-2 pr-2`}>
         <div className={`${styles.titleContainer}`}>
           <span className={`${styles.title}`}>Albums</span>
