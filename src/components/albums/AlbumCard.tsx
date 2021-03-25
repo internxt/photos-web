@@ -66,7 +66,6 @@ const AlbumCard = (props: AlbumCardProps) => {
     setEmptySecondarySpaces(emptySecondaryItems)
   }, [])
 
-  console.log('render')
   const renderItem = (photo: IAlbumPhoto, index: number) => (<img className={ index === 0 ? `${styles.photo} ${styles.roundedBottomLeft}` : `${styles.photo}` } src={photo.localUri} key={Math.random() * 100000} />)
   const renderEmptyItem = (_:any, index: number) => (<div key={index} className={`${styles.emptyItem}`}></div>)
 

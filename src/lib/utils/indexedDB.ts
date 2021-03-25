@@ -5,7 +5,6 @@ let DB: any
 
 export const createObjectStore = async (tableNames: string[]) => {
   try {
-    console.log('try')
     DB = await openDB(DATABASE, 1, {
       upgrade(db: IDBPDatabase) {
         for (const tableName of tableNames) {

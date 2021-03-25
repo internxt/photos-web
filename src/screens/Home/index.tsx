@@ -16,7 +16,7 @@ import m from '../../assets/images/13.jpg'
 import n from '../../assets/images/14.jpg'
 import o from '../../assets/images/15.jpg'
 import { useEffect, useState } from 'react';
-import { getAlbums } from './init';
+import { getAlbums, getPreviews } from './init';
 import Header from '../../layout/Header';
 
 export interface IHome {
@@ -25,6 +25,9 @@ export interface IHome {
 
 const Home = (props: IHome) => {
   const [albums, setAlbums] = useState<IAlbum[]>([])
+  const [uploadedPhotos, setUploadedPhotos] = useState()
+  const [isDownloading, setIsDownloading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   const albumes: IAlbum[] = [
     {
@@ -110,11 +113,24 @@ const Home = (props: IHome) => {
     { id: 15, localUri: '../../assets/images/15.jpg' }
   ]
 
+  const loadUploadedPhotos = (matchImages?: any) => {
+    setIsDownloading(true);
+    getPreviews(matchImages).then(res => {
+      setUploadedPhotos(res)
+    }).then(() => {
+      setIsLoading(false)
+    }).catch(() => {
+    }).finally(() => {
+      setIsDownloading(false);
+    })
+  }
+
   useEffect(() => {
-    getAlbums().then(res => {
+    /* getAlbums().then(res => {
       //console.log('albums =>', res)
       setAlbums(res)
-    })
+    }) */
+    loadUploadedPhotos()
   }, [])
 
   return (
