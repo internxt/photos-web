@@ -18,9 +18,10 @@ import o from '../../assets/images/15.jpg'
 import { useEffect, useState } from 'react';
 import { getAlbums, getPreviews } from './init';
 import Header from '../../layout/Header';
+import { createObjectStore, getAllValues } from '../../lib/utils/indexedDB';
+import { IDBPDatabase, openDB } from 'idb';
 
 export interface IHome {
-
 }
 
 const Home = (props: IHome) => {
@@ -28,6 +29,8 @@ const Home = (props: IHome) => {
   const [uploadedPhotos, setUploadedPhotos] = useState()
   const [isDownloading, setIsDownloading] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [allPhotos, setAllPhotos] = useState<Array<any>>([])
+  const [DB, setDB] = useState<IDBPDatabase>()
 
   const albumes: IAlbum[] = [
     {
@@ -113,29 +116,45 @@ const Home = (props: IHome) => {
     { id: 15, localUri: '../../assets/images/15.jpg' }
   ]
 
-  const loadUploadedPhotos = (matchImages?: any) => {
+  const loadUploadedPhotos = (dataBase: IDBPDatabase<unknown>, matchImages?: any) => {
     setIsDownloading(true);
-    getPreviews(matchImages).then(res => {
+
+    getPreviews(dataBase, matchImages).then(res => {
       setUploadedPhotos(res)
     }).then(() => {
-      setIsLoading(false)
-    }).catch(() => {
+      //setIsLoading(false)
+    }).catch((err) => {
+      console.log('getPreviews catch =>', err)
     }).finally(() => {
       setIsDownloading(false);
     })
   }
 
+  const openIndexedDB = (name: string, version?: number) => {
+    return openDB(name, version)
+  }
+
   useEffect(() => {
+    openIndexedDB('test2').then(db => {
+      console.log('dataBase opened =>', db)
+      setDB(db)
+      loadUploadedPhotos(db)
+
+      // get all stored photos in the database
+      getAllValues('photos', db).then(photos => {
+        console.log('all photos useEffect =>', photos)
+        setAllPhotos(photos)
+      })
+    })
     /* getAlbums().then(res => {
       //console.log('albums =>', res)
       setAlbums(res)
     }) */
-    loadUploadedPhotos()
   }, [])
 
   return (
     <div className={`${styles.mainContainer}`}>
-      <Header 
+      <Header
         showFileButtons={true}
         showSettingsButton={true}
       />
@@ -154,7 +173,20 @@ const Home = (props: IHome) => {
         </div>
       </div>
 
-      <div className={`${styles.container} ${styles.all}`}>all photos</div>
+      <div className={`${styles.container} ${styles.all}`}>
+        <div className={`${styles.titleContainer}`}>
+          <span className={`${styles.title}`}>All photos</span>
+
+          <span className={`${styles.filter}`}>Filter</span>
+        </div>
+
+        <div className={`${styles.albumCardList} list-group list-group-horizontal overflow-auto`}>
+          {
+            allPhotos.length > 0 ? allPhotos.map((photo: any) => (<img className={`${styles.photo}`} src={photo.src} key={photo.id} />))
+              : <span>chill bro photos loading</span>
+          }
+        </div>
+      </div>
 
       <div className={`${styles.container} ${styles.deleted}`}>deleted photos</div>
     </div>

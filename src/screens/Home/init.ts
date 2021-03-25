@@ -1,7 +1,10 @@
 import { mapSeries } from "async"
+import { IDBPDatabase, openDB } from "idb"
+import { stream } from "openpgp"
 import { IAlbum } from "../../components/albums/AlbumCard"
 import { IApiPhotoWithPreview } from "../../lib/types/photos"
 import { getHeaders, getHeadersPhotos } from "../../lib/utils/auth"
+import { putValue } from "../../lib/utils/indexedDB"
 
 export const getAlbums = async (): Promise<IAlbum[]> => {
   const headers = await getHeadersPhotos('eyJhbGciOiJIUzI1NiJ9.YWxkaW1pcnByaW5jaXBhbEBnbWFpbC5jb20.CX5-pNm2ZfJRThg21HiajFPN9mvWAm2E1cDOJwO1JCE', 'poem tag digital absorb perfect vacuum sheriff salt sight jump drop mutual donkey option fuel double soon control seek edit blanket visit loan athlete')
@@ -35,6 +38,7 @@ export async function getPartialUploadedPhotos(matchImages: any): Promise<IApiPh
 
 export function getUploadedPhotos(matchImages?: any): Promise<IApiPhotoWithPreview[]> {
   if (matchImages) {
+
     return getPartialUploadedPhotos(matchImages);
   }
 
@@ -56,7 +60,7 @@ export function getUploadedPhotos(matchImages?: any): Promise<IApiPhotoWithPrevi
   })
 }
 
-export async function downloadPreview(preview: any, photo: IApiPhotoWithPreview): Promise<any> {
+export async function downloadPreview(preview: any, photo: IApiPhotoWithPreview, dataBase: IDBPDatabase<unknown>): Promise<any> {
   if (!preview) {
     return Promise.resolve();
   }
@@ -78,51 +82,28 @@ export async function downloadPreview(preview: any, photo: IApiPhotoWithPreview)
   return fetch(`${process.env.REACT_APP_PRODUCTION_API_URL}/api/photos/storage/previews/${name}`, {
     method: 'GET',
     headers: h
-  }).then(res => {
-    console.log('res =>', res.body)
-    if (res.body) {
-      return res.body.getReader()
-    }
-    throw res
-  }).then(stream => {
-    console.log('stream =>', stream)
-    return new ReadableStream({
-      start(controller) {
-        function pump(): any {
-          return stream.read().then(({ done, value }) => {
-            if (done) {
-              controller.close()
-              return
-            }
-            controller.enqueue(value)
-            return pump()
-          })
-        }
-        return pump()
+  }).then(res => res.blob())
+    .then(blob => URL.createObjectURL(blob))
+    .then(url => {
+      const photo = {
+        src: url,
+        type: 'image/jpeg'
       }
+      console.log('url =>', url)
+      return putValue('photos', photo, dataBase)
+    }).catch(err => {
+      console.log('err =>', err)
+      throw err;
     })
-  })
-  .then(stream2 => new Response(stream2))
-  .then(res => res.blob())
-  .then(blob => {
-    console.log('blob =>', blob)
-    return URL.createObjectURL(blob)
-  })
-  .then(url => {
-    console.log('img.src =>', url, '\n --------------- NEW LINE --------------- \n')
-  }).catch(err => {
-    console.log('err =>', err)
-    throw err;
-  })
 }
 
-export function getPreviews(matchImages?: any): Promise<any> {
+export function getPreviews(database: IDBPDatabase<unknown>, matchImages?: any): Promise<any> {
   return getUploadedPhotos(matchImages).then((res) => {
-    console.log('uploadedPhotos =>', res)
     return mapSeries(res, (photo, next) => {
-      return downloadPreview(photo.preview, photo).then(() => {
+      return downloadPreview(photo.preview, photo, database).then(() => {
         next(null, photo)
       }).catch(err => {
+        console.log('error downloading preview =>', err)
       })
     })
   })
