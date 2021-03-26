@@ -49,7 +49,7 @@ const AllPhotos = () => {
         <span className={`home-filter`}>Filter</span>
       </div>
 
-      <div className={`list-group list-group-horizontal overflow-auto pl-3 pr-3`}>
+      <div className={`list-group list-group-horizontal overflow-auto ml-3 mr-3`}>
         {
           photosToRender.length > 0 ?
             photosToRender.map((photo: any) => (<img className={`${styles.photo}`} src={photo.src} key={photo.previewId} />))
