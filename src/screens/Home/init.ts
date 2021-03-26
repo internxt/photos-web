@@ -60,7 +60,7 @@ export function getUploadedPhotos(matchImages?: any): Promise<IApiPhotoWithPrevi
   })
 }
 
-export async function downloadPreview(preview: any, photo: IApiPhotoWithPreview, dataBase: IDBPDatabase<unknown>): Promise<any> {
+export async function downloadPreview(preview: any, dataBase: IDBPDatabase<unknown>): Promise<any> {
   if (!preview) {
     return Promise.resolve();
   }
@@ -79,33 +79,30 @@ export async function downloadPreview(preview: any, photo: IApiPhotoWithPreview,
   }
   //console.log('headersss:', h)
 
-  return fetch(`${process.env.REACT_APP_PRODUCTION_API_URL}/api/photos/storage/previews/${previewId}`, {
-    method: 'GET',
-    headers: h
-  }).then(preview => {
-    return preview.blob()
-  }).then(blob => URL.createObjectURL(blob))
-    .then(url => {
-      const preview = {
-        src: url,
-        type: 'image/jpeg',
-        previewId
-      }
+  const newPreview = await fetch(`${process.env.REACT_APP_PRODUCTION_API_URL}/api/photos/storage/previews/${previewId}`, { method: 'GET', headers: h })
+  const blob = await newPreview.blob()
+  const url = URL.createObjectURL(blob)
+  const objectToStore = { src: url, type: 'image/jpeg', previewId }
+  const existsPreview = await dataBase.get('photos', previewId)
 
-      return putValue('photos', preview, dataBase)
-    }).catch(err => {
-      console.log('Error while downloading the preview =>', err)
-    })
+  if (!existsPreview) {
+    await putValue('photos', objectToStore, dataBase)
+    return false
+  }
+  return true
 }
 
 export function downloadPreviews(dataBase: IDBPDatabase<unknown>, getPreviewFromDB: (dataBase: IDBPDatabase<unknown>, previewId: string) => void, matchImages?: any): Promise<any> {
   return getUploadedPhotos(matchImages).then((res) => {
     return mapSeries(res, (photo, next) => {
-      return downloadPreview(photo.preview, photo, dataBase).then(() => {
-        console.log('\n -------------------------- NEXT PHOTO -------------------------- \n')
-        if (photo.preview && photo.preview.fileId) {
+      return downloadPreview(photo.preview, dataBase).then((exists) => {
+        if (photo.preview && photo.preview.fileId && !exists) {
           getPreviewFromDB(dataBase, photo.preview.fileId)
-        } else console.log('Error while preparing preview for download: preview or preview.fileId null')
+        } else {
+          if (exists) console.log('Preview already stored on DB!')
+          else console.log('Error while preparing preview for download: preview or preview.fileId null')
+        }
+        console.log('\n -------------------------- NEXT PHOTO -------------------------- \n')
         next(null, photo)
       })
     })

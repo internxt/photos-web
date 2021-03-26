@@ -25,7 +25,6 @@ export const getValue = async (tableName: string, id: number | string, openedDat
   const tx = openedDataBase.transaction(tableName, 'readonly')
   const store = tx.objectStore(tableName)
   const result = await store.get(id)
-  console.log('Get Data ', JSON.stringify(result))
   return result
 }
 
