@@ -1,7 +1,6 @@
 import { IDBPDatabase, openDB } from 'idb'
 
 let DATABASE = 'test2'
-let DB: any
 
 export const createObjectStore = async (tableNames: string[]) => {
   try {
@@ -11,7 +10,7 @@ export const createObjectStore = async (tableNames: string[]) => {
           if (db.objectStoreNames.contains(tableName)) {
             continue
           }
-          db.createObjectStore(tableName, { autoIncrement: true, keyPath: 'id' })
+          db.createObjectStore(tableName)
         }
       },
     })
@@ -22,43 +21,42 @@ export const createObjectStore = async (tableNames: string[]) => {
   }
 }
 
-export const getValue = async (tableName: string, id: number, dataBase: IDBPDatabase<unknown>) => {
-  const tx = dataBase.transaction(tableName, 'readonly')
+export const getValue = async (tableName: string, id: number | string, openedDataBase: IDBPDatabase<unknown>) => {
+  const tx = openedDataBase.transaction(tableName, 'readonly')
   const store = tx.objectStore(tableName)
   const result = await store.get(id)
   console.log('Get Data ', JSON.stringify(result))
   return result
 }
 
-export const getAllValues = async (tableName: string, dataBase: IDBPDatabase<unknown>) => {
-  const tx = dataBase.transaction(tableName, 'readonly')
+export const getAllValues = async (tableName: string, openedDataBase: IDBPDatabase<unknown>) => {
+  const tx = openedDataBase.transaction(tableName, 'readonly')
   const store = tx.objectStore(tableName)
   const result = await store.getAll()
   //console.log('Get All Data', JSON.stringify(result))
   return result
 }
 
-export const putValue = async (tableName: string, value: object, dataBase: IDBPDatabase<unknown>) => {
-  console.log('put db =>', dataBase)
-  const tx = dataBase.transaction(tableName, 'readwrite')
+export const putValue = async (tableName: string, value: any, openedDataBase: IDBPDatabase<unknown>) => {
+  const tx = openedDataBase.transaction(tableName, 'readwrite')
   const store = tx.objectStore(tableName)
-  const result = await store.put(value)
+  const result = await store.put(value, value.previewId)
   console.log('Put Data ', JSON.stringify(result))
   return result
 }
 
-export const putBulkValue = async (tableName: string, values: object[], dataBase: IDBPDatabase<unknown>) => {
-  const tx = dataBase.transaction(tableName, 'readwrite')
+export const putBulkValue = async (tableName: string, values: object[], openedDataBase: IDBPDatabase<unknown>) => {
+  const tx = openedDataBase.transaction(tableName, 'readwrite')
   const store = tx.objectStore(tableName)
   for (const value of values) {
     const result = await store.put(value)
     //console.log('Put Bulk Data ', JSON.stringify(result))
   }
-  return getAllValues(tableName, dataBase)
+  return getAllValues(tableName, openedDataBase)
 }
 
-export const deleteValue = async (tableName: string, id: number, dataBase: IDBPDatabase<unknown>) => {
-  const tx = dataBase.transaction(tableName, 'readwrite')
+export const deleteValue = async (tableName: string, id: number, openedDataBase: IDBPDatabase<unknown>) => {
+  const tx = openedDataBase.transaction(tableName, 'readwrite')
   const store = tx.objectStore(tableName)
   const result = await store.get(id)
   if (!result) {

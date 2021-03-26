@@ -41,6 +41,7 @@ const AlbumCard = (props: AlbumCardProps) => {
 
   // set the three main photos of the album and remove them from the rest of the array
   useEffect(() => {
+    console.log('album cards rendered')
     let mainPhotos = []
     let otherPhotos = []
 

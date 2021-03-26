@@ -1,4 +1,4 @@
-import AlbumCard, { IAlbum } from '../../components/albums/AlbumCard';
+import AlbumCard, { IAlbum } from '../../components/Albums/AlbumCard';
 import styles from './home.module.scss'
 import a from '../../assets/images/1.jpg'
 import b from '../../assets/images/2.jpg'
@@ -16,21 +16,14 @@ import m from '../../assets/images/13.jpg'
 import n from '../../assets/images/14.jpg'
 import o from '../../assets/images/15.jpg'
 import { useEffect, useState } from 'react';
-import { getAlbums, getPreviews } from './init';
+import { downloadPreviews } from './init';
 import Header from '../../layout/Header';
-import { createObjectStore, getAllValues } from '../../lib/utils/indexedDB';
+import { getAllValues, getValue } from '../../lib/utils/indexedDB';
 import { IDBPDatabase, openDB } from 'idb';
+import AllPhotos from '../../components/AllPhotos';
 
-export interface IHome {
-}
-
-const Home = (props: IHome) => {
-  const [albums, setAlbums] = useState<IAlbum[]>([])
-  const [uploadedPhotos, setUploadedPhotos] = useState()
-  const [isDownloading, setIsDownloading] = useState(false)
+const Home = () => {
   const [isLoading, setIsLoading] = useState(true)
-  const [allPhotos, setAllPhotos] = useState<Array<any>>([])
-  const [DB, setDB] = useState<IDBPDatabase>()
 
   const albumes: IAlbum[] = [
     {
@@ -98,54 +91,9 @@ const Home = (props: IHome) => {
       ]
     }
   ]
-  const photos = [
-    { id: 1, localUri: '../../assets/images/1.jpg' },
-    { id: 2, localUri: '../../assets/images/2.jpg' },
-    { id: 3, localUri: '../../assets/images/3.jpg' },
-    { id: 4, localUri: '../../assets/images/4.jpg' },
-    { id: 5, localUri: '../../assets/images/5.jpg' },
-    { id: 6, localUri: '../../assets/images/6.jpg' },
-    { id: 7, localUri: '../../assets/images/7.jpg' },
-    { id: 8, localUri: '../../assets/images/8.jpg' },
-    { id: 9, localUri: '../../assets/images/9.jpg' },
-    { id: 10, localUri: '../../assets/images/10.jpg' },
-    { id: 11, localUri: '../../assets/images/11.jpg' },
-    { id: 12, localUri: '../../assets/images/12.jpg' },
-    { id: 13, localUri: '../../assets/images/13.jpg' },
-    { id: 14, localUri: '../../assets/images/14.jpg' },
-    { id: 15, localUri: '../../assets/images/15.jpg' }
-  ]
-
-  const loadUploadedPhotos = (dataBase: IDBPDatabase<unknown>, matchImages?: any) => {
-    setIsDownloading(true);
-
-    getPreviews(dataBase, matchImages).then(res => {
-      setUploadedPhotos(res)
-    }).then(() => {
-      //setIsLoading(false)
-    }).catch((err) => {
-      console.log('getPreviews catch =>', err)
-    }).finally(() => {
-      setIsDownloading(false);
-    })
-  }
-
-  const openIndexedDB = (name: string, version?: number) => {
-    return openDB(name, version)
-  }
 
   useEffect(() => {
-    openIndexedDB('test2').then(db => {
-      console.log('dataBase opened =>', db)
-      setDB(db)
-      loadUploadedPhotos(db)
-
-      // get all stored photos in the database
-      getAllValues('photos', db).then(photos => {
-        console.log('all photos useEffect =>', photos)
-        setAllPhotos(photos)
-      })
-    })
+    
     /* getAlbums().then(res => {
       //console.log('albums =>', res)
       setAlbums(res)
@@ -173,20 +121,7 @@ const Home = (props: IHome) => {
         </div>
       </div>
 
-      <div className={`${styles.container} ${styles.all}`}>
-        <div className={`${styles.titleContainer}`}>
-          <span className={`${styles.title}`}>All photos</span>
-
-          <span className={`${styles.filter}`}>Filter</span>
-        </div>
-
-        <div className={`${styles.albumCardList} list-group list-group-horizontal overflow-auto`}>
-          {
-            allPhotos.length > 0 ? allPhotos.map((photo: any) => (<img className={`${styles.photo}`} src={photo.src} key={photo.id} />))
-              : <span>chill bro photos loading</span>
-          }
-        </div>
-      </div>
+      <AllPhotos />
 
       <div className={`${styles.container} ${styles.deleted}`}>deleted photos</div>
     </div>

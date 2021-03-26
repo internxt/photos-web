@@ -1,13 +1,13 @@
 import { mapSeries } from "async"
 import { IDBPDatabase, openDB } from "idb"
 import { stream } from "openpgp"
-import { IAlbum } from "../../components/albums/AlbumCard"
+import { IAlbum } from "../../components/Albums/AlbumCard"
 import { IApiPhotoWithPreview } from "../../lib/types/photos"
 import { getHeaders, getHeadersPhotos } from "../../lib/utils/auth"
 import { putValue } from "../../lib/utils/indexedDB"
 
 export const getAlbums = async (): Promise<IAlbum[]> => {
-  const headers = await getHeadersPhotos('eyJhbGciOiJIUzI1NiJ9.YWxkaW1pcnByaW5jaXBhbEBnbWFpbC5jb20.CX5-pNm2ZfJRThg21HiajFPN9mvWAm2E1cDOJwO1JCE', 'poem tag digital absorb perfect vacuum sheriff salt sight jump drop mutual donkey option fuel double soon control seek edit blanket visit loan athlete')
+  const headers = await getHeaders(true, true)
 
   console.log(`${process.env.REACT_APP_PROXY_URL}/api/photos/storage/photosalbum`)
   return fetch(`${process.env.REACT_APP_API_URL}/api/photos/storage/photosalbum`, {
@@ -47,8 +47,8 @@ export function getUploadedPhotos(matchImages?: any): Promise<IApiPhotoWithPrevi
     'content-type': 'application/json; charset=utf-8',
     'internxt-version': '1.0.0',
     'internxt-client': 'drive-mobile',
-    'Authorization': `Bearer eyJhbGciOiJIUzI1NiJ9.YWxkaW1pcnByaW5jaXBhbEBnbWFpbC5jb20.CX5-pNm2ZfJRThg21HiajFPN9mvWAm2E1cDOJwO1JCE`,
-    'internxt-mnemonic': `poem tag digital absorb perfect vacuum sheriff salt sight jump drop mutual donkey option fuel double soon control seek edit blanket visit loan athlete`,
+    'Authorization': `Bearer ${process.env.REACT_APP_XTOKEN}`,
+    'internxt-mnemonic': process.env.REACT_APP_MNEMONIC
   }
 
   return fetch(`${process.env.REACT_APP_PRODUCTION_API_URL}/api/photos/storage/photos`, {
@@ -68,42 +68,45 @@ export async function downloadPreview(preview: any, photo: IApiPhotoWithPreview,
   const xUser = localStorage.getItem('xUser')
   const xUserJson = JSON.parse(xUser || '{}')
   const typePreview = preview.type
-  const name = preview.fileId
+  const previewId = preview.fileId
   const headers = getHeaders(true, true)
   const h = {
     'content-type': 'application/json; charset=utf-8',
     'internxt-version': '1.0.0',
     'internxt-client': 'drive-mobile',
-    'Authorization': `Bearer eyJhbGciOiJIUzI1NiJ9.YWxkaW1pcnByaW5jaXBhbEBnbWFpbC5jb20.CX5-pNm2ZfJRThg21HiajFPN9mvWAm2E1cDOJwO1JCE`,
-    'internxt-mnemonic': `poem tag digital absorb perfect vacuum sheriff salt sight jump drop mutual donkey option fuel double soon control seek edit blanket visit loan athlete`,
+    'Authorization': `Bearer ${process.env.REACT_APP_XTOKEN}`,
+    'internxt-mnemonic': process.env.REACT_APP_MNEMONIC
   }
   //console.log('headersss:', h)
 
-  return fetch(`${process.env.REACT_APP_PRODUCTION_API_URL}/api/photos/storage/previews/${name}`, {
+  return fetch(`${process.env.REACT_APP_PRODUCTION_API_URL}/api/photos/storage/previews/${previewId}`, {
     method: 'GET',
     headers: h
-  }).then(res => res.blob())
-    .then(blob => URL.createObjectURL(blob))
+  }).then(preview => {
+    return preview.blob()
+  }).then(blob => URL.createObjectURL(blob))
     .then(url => {
-      const photo = {
+      const preview = {
         src: url,
-        type: 'image/jpeg'
+        type: 'image/jpeg',
+        previewId
       }
-      console.log('url =>', url)
-      return putValue('photos', photo, dataBase)
+
+      return putValue('photos', preview, dataBase)
     }).catch(err => {
-      console.log('err =>', err)
-      throw err;
+      console.log('Error while downloading the preview =>', err)
     })
 }
 
-export function getPreviews(database: IDBPDatabase<unknown>, matchImages?: any): Promise<any> {
+export function downloadPreviews(dataBase: IDBPDatabase<unknown>, getPreviewFromDB: (dataBase: IDBPDatabase<unknown>, previewId: string) => void, matchImages?: any): Promise<any> {
   return getUploadedPhotos(matchImages).then((res) => {
     return mapSeries(res, (photo, next) => {
-      return downloadPreview(photo.preview, photo, database).then(() => {
+      return downloadPreview(photo.preview, photo, dataBase).then(() => {
+        console.log('\n -------------------------- NEXT PHOTO -------------------------- \n')
+        if (photo.preview && photo.preview.fileId) {
+          getPreviewFromDB(dataBase, photo.preview.fileId)
+        } else console.log('Error while preparing preview for download: preview or preview.fileId null')
         next(null, photo)
-      }).catch(err => {
-        console.log('error downloading preview =>', err)
       })
     })
   })
