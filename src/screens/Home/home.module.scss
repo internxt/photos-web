@@ -56,8 +56,10 @@
 }
 
 .photo {
-  min-width: 206px;
-  height: 206px;
+  width: 120px;
+  height: 120px;
+  min-width: 120px;
   object-fit: cover;
-  margin-right: 16px;
+  margin: 0 6px 6px 0;
+  border-radius: 6px;
 }

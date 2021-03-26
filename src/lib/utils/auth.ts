@@ -28,13 +28,12 @@ function getHeaders(withAuth: Boolean, withMnemonic: Boolean, isTeam: Boolean = 
   return headers;
 }
 
-// CHECK THIS ONCE LAZY LOADING PHOTOS FINISHED
 async function getHeadersPhotos(authToken?: string, mnemonic?: string): Promise<Headers> {
 
   let storedAuthToken;
 
   if (!authToken) {
-    storedAuthToken = process.env.xToken
+    storedAuthToken = process.env.REACT_APP_XTOKEN
   } else {
     storedAuthToken = authToken
   }
@@ -42,10 +41,7 @@ async function getHeadersPhotos(authToken?: string, mnemonic?: string): Promise<
   let storedMnemonic;
 
   if (!mnemonic) {
-    const xUser = process.env.mnemonic
-    const xUserJson = JSON.parse(xUser || '{}')
-
-    storedMnemonic = process.env.mnemonic;
+    storedMnemonic = process.env.REACT_APP_MNEMONIC;
   } else {
     storedMnemonic = mnemonic
   }
@@ -61,7 +57,6 @@ async function getHeadersPhotos(authToken?: string, mnemonic?: string): Promise<
 
   return headers;
 }
-
 
 export {
   getHeaders,
