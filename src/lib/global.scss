@@ -8,3 +8,34 @@ $border-radius: 6px;
 html {
   scroll-behavior: smooth;
 }
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.home-titleContainer {
+  display: flex;
+  padding: 0 24px;
+  justify-content: space-between;
+}
+
+.home-title {
+  align-self: center;
+  color: black;
+  font-family: CerebriSans-Bold;
+  font-size: 18px;
+  height: 30px;
+  letter-spacing: -0.13px;
+}
+
+.home-filter {
+  font-family: CerebriSans-Semibold;
+  font-size: 14px;
+  letter-spacing: -0.13px;
+  color: #bfbfbf;
+  align-self: flex-end;
+  height: 30px;
+  width: 50px;
+}

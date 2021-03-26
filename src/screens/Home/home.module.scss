@@ -50,3 +50,12 @@
 .deleted {
   background-color: green;
 }
+
+.photo {
+  width: 120px;
+  height: 120px;
+  min-width: 120px;
+  object-fit: cover;
+  margin: 0 6px 6px 0;
+  border-radius: 6px;
+}

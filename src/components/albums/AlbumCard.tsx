@@ -41,6 +41,7 @@ const AlbumCard = (props: AlbumCardProps) => {
 
   // set the three main photos of the album and remove them from the rest of the array
   useEffect(() => {
+    console.log('album cards rendered')
     let mainPhotos = []
     let otherPhotos = []
 
@@ -66,7 +67,6 @@ const AlbumCard = (props: AlbumCardProps) => {
     setEmptySecondarySpaces(emptySecondaryItems)
   }, [])
 
-  console.log('render')
   const renderItem = (photo: IAlbumPhoto, index: number) => (<img className={ index === 0 ? `${styles.photo} ${styles.roundedBottomLeft}` : `${styles.photo}` } src={photo.localUri} key={Math.random() * 100000} />)
   const renderEmptyItem = (_:any, index: number) => (<div key={index} className={`${styles.emptyItem}`}></div>)
 

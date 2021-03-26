@@ -1,71 +1,68 @@
 import { IDBPDatabase, openDB } from 'idb'
 
 let DATABASE = 'test2'
-let DB: any
 
 export const createObjectStore = async (tableNames: string[]) => {
   try {
-    console.log('try')
-    DB = await openDB(DATABASE, 1, {
+    const dataBase = await openDB(DATABASE, 1, {
       upgrade(db: IDBPDatabase) {
         for (const tableName of tableNames) {
           if (db.objectStoreNames.contains(tableName)) {
-            continue;
+            continue
           }
-          db.createObjectStore(tableName, { autoIncrement: true, keyPath: 'id' });
+          db.createObjectStore(tableName)
         }
       },
-    });
-    console.log('db created =>', DB)
+    })
+    console.log('db created =>', dataBase)
   } catch (error) {
     console.log('catch', error)
-    return false;
+    return false
   }
 }
 
-export const getValue = async (tableName: string, id: number) => {
-  const tx = DB.transaction(tableName, 'readonly');
-  const store = tx.objectStore(tableName);
-  const result = await store.get(id);
-  console.log('Get Data ', JSON.stringify(result));
-  return result;
+export const getValue = async (tableName: string, id: number | string, openedDataBase: IDBPDatabase<unknown>) => {
+  const tx = openedDataBase.transaction(tableName, 'readonly')
+  const store = tx.objectStore(tableName)
+  const result = await store.get(id)
+  return result
 }
 
-export const getAllValue = async (tableName: string) => {
-  const tx = DB.transaction(tableName, 'readonly');
-  const store = tx.objectStore(tableName);
-  const result = await store.getAll();
-  //console.log('Get All Data', JSON.stringify(result));
-  return result;
+export const getAllValues = async (tableName: string, openedDataBase: IDBPDatabase<unknown>) => {
+  const tx = openedDataBase.transaction(tableName, 'readonly')
+  const store = tx.objectStore(tableName)
+  const result = await store.getAll()
+  //console.log('Get All Data', JSON.stringify(result))
+  return result
 }
 
-export const putValue = async (tableName: string, value: object) => {
-  const tx = DB.transaction(tableName, 'readwrite');
-  const store = tx.objectStore(tableName);
-  const result = await store.put(value);
-  console.log('Put Data ', JSON.stringify(result));
-  return result;
+export const putValue = async (tableName: string, value: any, openedDataBase: IDBPDatabase<unknown>) => {
+  const tx = openedDataBase.transaction(tableName, 'readwrite')
+  const store = tx.objectStore(tableName)
+  const result = await store.put(value, value.previewId)
+  console.log('Put Data ', JSON.stringify(result))
+  return result
 }
 
-export const putBulkValue = async (tableName: string, values: object[]) => {
-  const tx = DB.transaction(tableName, 'readwrite');
-  const store = tx.objectStore(tableName);
+export const putBulkValue = async (tableName: string, values: object[], openedDataBase: IDBPDatabase<unknown>) => {
+  const tx = openedDataBase.transaction(tableName, 'readwrite')
+  const store = tx.objectStore(tableName)
   for (const value of values) {
-    const result = await store.put(value);
-    //console.log('Put Bulk Data ', JSON.stringify(result));
+    const result = await store.put(value)
+    //console.log('Put Bulk Data ', JSON.stringify(result))
   }
-  return getAllValue(tableName);
+  return getAllValues(tableName, openedDataBase)
 }
 
-export const deleteValue = async (tableName: string, id: number) => {
-  const tx = DB.transaction(tableName, 'readwrite');
-  const store = tx.objectStore(tableName);
-  const result = await store.get(id);
+export const deleteValue = async (tableName: string, id: number, openedDataBase: IDBPDatabase<unknown>) => {
+  const tx = openedDataBase.transaction(tableName, 'readwrite')
+  const store = tx.objectStore(tableName)
+  const result = await store.get(id)
   if (!result) {
-    console.log('Id not found', id);
-    return result;
+    console.log('Id not found', id)
+    return result
   }
-  await store.delete(id);
-  console.log('Deleted Data', id);
-  return id;
+  await store.delete(id)
+  console.log('Deleted Data', id)
+  return id
 }

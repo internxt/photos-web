@@ -16,6 +16,7 @@ import { analytics } from '../../lib/utils/analytics';
 import Settings from '../../lib/utils/settings';
 import { storeTeamsInfo } from '../../lib/services/teams.service';
 import { decryptPGP } from '../../lib/utils/pgp';
+import { createObjectStore } from '../../lib/utils/indexedDB';
 
 export interface ILogin {
   email?: string,
@@ -191,6 +192,8 @@ const Login = (props: ILogin) => {
           Settings.set('xTokenTeam', data.tokenTeam);
         }
 
+        return { data, user }
+
         /* window.analytics.identify(data.user.uuid, {
           email: formInputValues.email,
           platform: 'web',
@@ -203,17 +206,19 @@ const Login = (props: ILogin) => {
             userId: user.uuid
           })
         }) */
-
-        setIsAuthenticated(true)
-        setToken(data.token)
-        setxUser(user)
-        setRegisterCompleted(data.user.registerCompleted)
-        setIsTeam(false)
-      })
-        .then(() => initUser())
-        .catch(err => {
-          throw Error(`"${err.error ? err.error : err}"`);
+      }).then(res => {
+        // Initialize user for photos and create the local database store
+        initUser()
+        createObjectStore(['photos', 'albums']).finally(() => {
+          setIsAuthenticated(true)
+          setToken(res.data.token)
+          setxUser(res.user)
+          setRegisterCompleted(res.data.user.registerCompleted)
+          setIsTeam(false)
         })
+      }).catch(err => {
+        throw Error(`"${err.error ? err.error : err}"`);
+      })
 
     }).catch(err => {
       console.error('Login error. ' + err.message);

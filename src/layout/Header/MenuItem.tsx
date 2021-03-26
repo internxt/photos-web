@@ -7,7 +7,6 @@ interface MenuItemProps {
 }
 
 const MenuItem = (props: MenuItemProps) => {
-  console.log('MenuItem rendered')
   return (
     <div className="MenuItem" onClick={props.clickHandler} style={{
       backgroundImage: `url(${props.icon})`,

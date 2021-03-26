@@ -23,7 +23,7 @@ function App() {
   }
 
   useEffect(() => {
-    const runIndexDb = async () => {
+    /* const runIndexDb = async () => {
       await createObjectStore(['photos', 'albums'])
       await putBulkValue('albums', [
         {
@@ -109,7 +109,7 @@ function App() {
         { id: 15, localUri: '../../assets/images/15.jpg' }
       ])
     }
-    runIndexDb();
+    runIndexDb().then(() => setDBOpen(true)) */
   }, [])
 
   return (
