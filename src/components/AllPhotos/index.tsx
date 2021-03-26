@@ -36,10 +36,9 @@ const AllPhotos = () => {
       }).catch((err) => {
         console.log('getPreviews catch =>', err)
       }).finally(() => {
-        setIsDownloading(false);
+        setIsDownloading(false)
       })
     })
-
   }, [])
 
   return (
@@ -50,14 +49,16 @@ const AllPhotos = () => {
         <span className={`home-filter`}>Filter</span>
       </div>
 
-      <div className={`list-group list-group-horizontal overflow-auto`}>
+      <div className={`list-group list-group-horizontal overflow-auto pl-3 pr-3`}>
         {
-          photosToRender.length > 0 ? photosToRender.map((photo: any) => (<img className={`${styles.photo}`} src={photo.src} key={photo.previewId} />))
-            : <span>chill bro you dont have photos</span>
+          photosToRender.length > 0 ?
+            photosToRender.map((photo: any) => (<img className={`${styles.photo}`} src={photo.src} key={photo.previewId} />))
+            :
+            <span>chill bro you dont have photos</span>
         }
       </div>
     </div>
-  );
+  )
 }
 
 export default AllPhotos;
