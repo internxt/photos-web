@@ -79,9 +79,9 @@ const PhotoGallery = (props: PhotoGalleryProps) => {
 
       // get all stored photos in the database on first render
       getAllValues('photos', db).then(photos => {
-        console.log('photoGallery useEffect =>', photos.length)
-        setPhotosToRender(photos)
-      }).finally(() => setIsLoading(false))
+        return photos.map(photo => ({ ...photo, src: URL.createObjectURL(photo.blob) }))
+      }).then(previews => setPhotosToRender(previews))
+        .finally(() => setIsLoading(false))
     })
   }, [])
 
@@ -100,7 +100,12 @@ const PhotoGallery = (props: PhotoGalleryProps) => {
       </div>
 
       <div className={`grid grid-cols-4 gap-4 my-4 mx-auto 1080:grid-cols-5 1280:grid-cols-6 1440:grid-cols-7 1920:grid-cols-8`}>
-        {photosToRender.map(photo => <img className={`w-44 h-44 object-cover rounded-lg 1920:w-48 1920:h-48`} src={photo.src} key={photo.previewId} />)}
+        {
+          !isLoading ?
+            photosToRender.map(photo => <img className={`w-44 h-44 object-cover rounded-lg 1920:w-48 1920:h-48`} src={photo.src} key={photo.previewId} />)
+            :
+            null
+        }
         {/* {
           !isLoading ?
             <PhotoList

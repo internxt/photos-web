@@ -11,35 +11,28 @@ export interface AllPhotosProps {
 
 const AllPhotos = () => {
   const [photosToRender, setPhotosToRender] = useState<Array<any>>([])
-  const [uploadedPhotos, setUploadedPhotos] = useState()
-  const [isDownloading, setIsDownloading] = useState(false)
   const history = useHistory()
 
   const getPreviewFromDB = (dataBase: IDBPDatabase<unknown>, previewId: string): void => {
     getValue('photos', previewId, dataBase).then(photo => {
       if (photo) {
-        setPhotosToRender(prevState => [...prevState, photo])
+        const preview = {
+          ...photo,
+          src: URL.createObjectURL(photo.blob)
+        }
+        setPhotosToRender(prevState => [...prevState, preview])
       }
     })
   }
 
   useEffect(() => {
     openDB('test2').then(db => {
-      console.log('dataBase opened =>', db)
-
       // get all stored photos in the database on first render
       getAllValues('photos', db).then(photos => {
-        console.log('all photos useEffect =>', photos.length)
-        setPhotosToRender(photos)
-      })
-
-      downloadPreviews(db, getPreviewFromDB).then(previews => {
-        setUploadedPhotos(previews)
-      }).catch((err) => {
-        console.log('getPreviews catch =>', err)
-      }).finally(() => {
-        setIsDownloading(false)
-      })
+        return photos.map(photo => ({ ...photo, src: URL.createObjectURL(photo.blob) }))
+      }).then(previews => setPhotosToRender(previews))
+        .then(() => downloadPreviews(db, getPreviewFromDB))
+        .catch(err => console.log('getAllValues catch =>', err))
     })
   }, [])
 
