@@ -96,7 +96,7 @@ const Albums = () => {
   return (
     <div className={`home-container`}>
       <div className={`home-titleContainer`}>
-        <span className={`home-title`}>Albums</span>
+        <h1 className={`home-title`}>Albums</h1>
 
         <span className={`home-filter`}>Filter</span>
       </div>
@@ -109,8 +109,6 @@ const Albums = () => {
           :
           <CreateAlbumCard />
       }
-
-
     </div>
   )
 }
