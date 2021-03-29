@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.titleContainer {
+  display: flex;
+  align-self: center;
+  flex-direction: column;
+}
+
+.title {
+  color: #000000;
+  font-family: CerebriSans-Bold;
+  font-size: 24px;
+  text-align: center;
+}
+
+.photosCount {
+  color: #bfbfbf;
+  font-family: CerebriSans-Regular;
+  font-size: 16px;
+  padding-top: 5px;
+  text-align: center;
+}
+
+.photoList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo {
+  width: 20vw;
+  height: 20vw;
+  object-fit: cover;
+  margin: 4px;
+  border-radius: 6px;
+}

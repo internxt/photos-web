@@ -1,5 +1,6 @@
 import { IDBPDatabase, openDB } from "idb";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import { getAllValues, getValue } from "../../lib/utils/indexedDB";
 import { downloadPreviews } from "../../screens/Home/init";
 import styles from './AllPhotos.module.scss'
@@ -12,6 +13,7 @@ const AllPhotos = () => {
   const [photosToRender, setPhotosToRender] = useState<Array<any>>([])
   const [uploadedPhotos, setUploadedPhotos] = useState()
   const [isDownloading, setIsDownloading] = useState(false)
+  const history = useHistory()
 
   const getPreviewFromDB = (dataBase: IDBPDatabase<unknown>, previewId: string): void => {
     getValue('photos', previewId, dataBase).then(photo => {
@@ -44,7 +46,11 @@ const AllPhotos = () => {
   return (
     <div className={`home-container`}>
       <div className={`home-titleContainer`}>
-        <span className={`home-title`}>All photos</span>
+        <span className={`home-title`}
+          onClick={() => {
+            history.push('photos')
+          }}
+        >All photos</span>
 
         <span className={`home-filter`}>Filter</span>
       </div>

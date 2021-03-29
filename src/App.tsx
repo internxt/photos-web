@@ -5,8 +5,8 @@ import Home from './screens/Home'
 import Login from './screens/Login'
 import { useEffect, useState } from 'react';
 import Settings from './lib/utils/settings';
-import { createObjectStore, putBulkValue } from './lib/utils/indexedDB';
 import New from './screens/Login/New';
+import Photos from './screens/PhotoGallery';
 
 interface IUser {
 
@@ -120,6 +120,8 @@ function App() {
         <Route exact path='/new' render={(props: any) => <New isNewUser={true} isAuthenticated={isAuthenticated} handleKeySaved={handleKeySaved} {...props} />} />
 
         <Route path='/app' render={() => <Home />} />
+
+        <Route path='/photos' render={() => <Photos />} />
 
         <Route exact path='/'>
           <Redirect to="/login" />

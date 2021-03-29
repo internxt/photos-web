@@ -30,6 +30,11 @@ html {
   letter-spacing: -0.13px;
 }
 
+.home-title:hover {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
 .home-filter {
   font-family: CerebriSans-Semibold;
   font-size: 14px;
