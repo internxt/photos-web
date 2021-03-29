@@ -1,8 +1,7 @@
-import styles from './home.module.scss'
-import Header from '../../layout/Header';
-import AllPhotos from '../../components/AllPhotos';
 import Albums from '../../components/Albums';
-
+import AllPhotos from '../../components/AllPhotos';
+import Header from '../../layout/Header';
+import styles from './home.module.scss'
 const Home = () => {
 
   return (
@@ -12,7 +11,7 @@ const Home = () => {
         showSettingsButton={true}
       />
 
-      {/* <Albums /> */}
+      <Albums />
 
       <AllPhotos />
 
