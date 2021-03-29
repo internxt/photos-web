@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AlbumCard, { IAlbum } from "./AlbumCard";
 import a from '../../assets/images/1.jpg'
 import b from '../../assets/images/2.jpg'
@@ -15,8 +15,10 @@ import l from '../../assets/images/12.jpg'
 import m from '../../assets/images/13.jpg'
 import n from '../../assets/images/14.jpg'
 import o from '../../assets/images/15.jpg'
+import CreateAlbumCard from "./CreateAlbumCard";
 
 const Albums = () => {
+  const [albums, setAlbums] = useState<IAlbum[]>([])
   const albumes: IAlbum[] = [
     {
       title: 'Random shit', photos: [
@@ -94,16 +96,19 @@ const Albums = () => {
   return (
     <div className={`home-container`}>
       <div className={`home-titleContainer`}>
-        <span className={`home-title`}>Albums</span>
+        <h1 className={`home-title`}>Albums</h1>
 
         <span className={`home-filter`}>Filter</span>
       </div>
 
-      <div className={`list-group list-group-horizontal overflow-auto pl-3 pr-3`}>
-        {
-          albumes.map(album => (<AlbumCard album={album} key={Math.random() * 10000000} />))
-        }
-      </div>
+      {
+        albums.length > 0 ?
+          <div className={`list-group list-group-horizontal overflow-auto pl-3 pr-3`}>
+            {albumes.map(album => (<AlbumCard album={album} key={Math.random() * 10000000} />))}
+          </div>
+          :
+          <CreateAlbumCard />
+      }
     </div>
   )
 }

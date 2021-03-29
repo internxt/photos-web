@@ -13,6 +13,7 @@ const AllPhotos = () => {
   const [uploadedPhotos, setUploadedPhotos] = useState()
   const [isDownloading, setIsDownloading] = useState(false)
 
+  // push the last downloaded preview to the existing array
   const getPreviewFromDB = (dataBase: IDBPDatabase<unknown>, previewId: string): void => {
     getValue('photos', previewId, dataBase).then(photo => {
       if (photo) {
@@ -31,6 +32,7 @@ const AllPhotos = () => {
         setPhotosToRender(photos)
       })
 
+      // start downloading the previews
       downloadPreviews(db, getPreviewFromDB).then(previews => {
         setUploadedPhotos(previews)
       }).catch((err) => {
@@ -44,7 +46,7 @@ const AllPhotos = () => {
   return (
     <div className={`home-container`}>
       <div className={`home-titleContainer`}>
-        <span className={`home-title`}>All photos</span>
+        <h1 className={`home-title`}>All photos</h1>
 
         <span className={`home-filter`}>Filter</span>
       </div>
