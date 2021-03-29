@@ -94,12 +94,12 @@ export async function downloadPreview(preview: any, dataBase: IDBPDatabase<unkno
   return true
 }
 
-export function downloadPreviews(dataBase: IDBPDatabase<unknown>, getPreviewFromDB: (dataBase: IDBPDatabase<unknown>, previewId: string) => void, matchImages?: any): Promise<any> {
+export function downloadPreviews(dataBase: IDBPDatabase<unknown>, getPreviewFromDB: (previewId: string) => void, matchImages?: any): Promise<any> {
   return getUploadedPhotos(matchImages).then((res) => {
     return mapSeries(res, (photo, next) => {
       return downloadPreview(photo.preview, dataBase).then((exists) => {
         if (photo.preview && photo.preview.fileId && !exists) {
-          getPreviewFromDB(dataBase, photo.preview.fileId)
+          getPreviewFromDB(photo.preview.fileId)
         } else {
           if (exists) console.log('Preview already stored on DB!')
           else console.log('Error while preparing preview for download: preview or preview.fileId null')

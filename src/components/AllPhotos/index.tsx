@@ -6,15 +6,15 @@ import { downloadPreviews } from "../../screens/Home/init";
 import styles from './AllPhotos.module.scss'
 
 export interface AllPhotosProps {
-
+  dataBase: IDBPDatabase<unknown>,
 }
 
-const AllPhotos = () => {
+const AllPhotos = (props: AllPhotosProps) => {
   const [photosToRender, setPhotosToRender] = useState<Array<any>>([])
   const history = useHistory()
 
-  const getPreviewFromDB = (dataBase: IDBPDatabase<unknown>, previewId: string): void => {
-    getValue('photos', previewId, dataBase).then(photo => {
+  const getPreviewFromDB = (previewId: string): void => {
+    getValue('photos', previewId, props.dataBase).then(photo => {
       if (photo) {
         const preview = {
           ...photo,
@@ -26,14 +26,11 @@ const AllPhotos = () => {
   }
 
   useEffect(() => {
-    openDB('test2').then(db => {
-      // get all stored photos in the database on first render
-      getAllValues('photos', db).then(photos => {
-        return photos.map(photo => ({ ...photo, src: URL.createObjectURL(photo.blob) }))
-      }).then(previews => setPhotosToRender(previews))
-        .then(() => downloadPreviews(db, getPreviewFromDB))
-        .catch(err => console.log('getAllValues catch =>', err))
-    })
+    getAllValues('photos', props.dataBase).then(photos => {
+      return photos.map(photo => ({ ...photo, src: URL.createObjectURL(photo.blob) }))
+    }).then(previews => setPhotosToRender(previews))
+      .then(() => downloadPreviews(props.dataBase, getPreviewFromDB))
+      .catch(err => console.log('getAllValues catch =>', err))
   }, [])
 
   return (
@@ -41,7 +38,7 @@ const AllPhotos = () => {
       <div className={`home-titleContainer`}>
         <span className={`home-title`}
           onClick={() => {
-            history.push('photos')
+            history.push('gallery')
           }}
         >All photos</span>
 

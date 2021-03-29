@@ -1,5 +1,5 @@
 
-import { openDB } from 'idb';
+import { IDBPDatabase, openDB } from 'idb';
 import { useEffect, useState } from 'react';
 import Header from '../../layout/Header';
 import { getAllValues } from '../../lib/utils/indexedDB';
@@ -7,6 +7,7 @@ import styles from './PhotoGallery.module.scss'
 import ActivityIndicator from '../../components/ActivityIndicator'
 
 interface PhotoGalleryProps {
+  dataBase: IDBPDatabase<unknown>
 }
 
 /* function setStatus(localPhotos: IHashedPhoto[], remotePhotos: IHashedPhoto[]) {
@@ -33,11 +34,10 @@ async function checkExists(photos: IHashedPhoto[]) {
 
 const PhotoGallery = (props: PhotoGalleryProps) => {
   const [isLoading, setIsLoading] = useState(true)
-  const [photosToRender, setPhotosToRender] = useState<any[]>([]);
-  const [uploadedPhotos, setUploadedPhotos] = useState<[]>([]);
-  const [isDownloading, setIsDownloading] = useState(true);
-  const [endCursor, setEndCursor] = useState<string | undefined>(undefined);
-  const WINDOW_WIDTH = window.innerWidth
+  const [photosToRender, setPhotosToRender] = useState<any[]>([])
+  const [uploadedPhotos, setUploadedPhotos] = useState<[]>([])
+  const [isDownloading, setIsDownloading] = useState(true)
+  const [endCursor, setEndCursor] = useState<string | undefined>(undefined)
 
   /*   const filteredPhotos = setStatus(localPhotos, uploadedPhotos); */
 
@@ -106,32 +106,6 @@ const PhotoGallery = (props: PhotoGalleryProps) => {
             :
             null
         }
-        {/* {
-          !isLoading ?
-            <PhotoList
-              data={filteredPhotos}
-              numColumns={3}
-              onRefresh={() => {
-                setIsLoading(true);
-                loadPhotos().finally(() => setIsLoading(false));
-              }}
-              onItemPress={(event, item) => {
-                if (item.isUploaded && !item.isLocal) {
-                  downloadPhoto(item).then(x => {
-                    loadPhotos();
-                  }).catch((err) => {
-                  })
-                } else {
-                  FileViewer.open(item.localUri || '')
-                }
-              }}
-              keyExtractor={(item) => item.id}
-              contentContainerclassName={styles.flatList}
-              onEndReached={() => loadPhotos(endCursor)}
-            />
-            :
-            <WaveIndicator color="#5291ff" size={50} />
-        } */}
       </div>
     </div>
   )

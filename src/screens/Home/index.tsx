@@ -1,9 +1,15 @@
 import styles from './home.module.scss'
 import Header from '../../layout/Header';
 import AllPhotos from '../../components/AllPhotos';
-import Albums from '../../components/Albums';
+import { useState } from 'react';
+import { IDBPDatabase } from 'idb';
 
-const Home = () => {
+interface HomeProps {
+  dataBase: IDBPDatabase<unknown>
+}
+
+const Home = (props: HomeProps) => {
+  const [isLoading, setIsLoading] = useState(true)
 
   return (
     <div className={`${styles.mainContainer}`}>
@@ -14,7 +20,7 @@ const Home = () => {
 
       {/* <Albums /> */}
 
-      <AllPhotos />
+      <AllPhotos dataBase={props.dataBase} />
 
       <div className={`${styles.container} ${styles.deleted}`}>deleted photos</div>
     </div>
