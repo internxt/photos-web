@@ -99,8 +99,8 @@ const PhotoGallery = (props: PhotoGalleryProps) => {
           </span>
       </div>
 
-      <div className={`${styles.photoList}`}>
-        {photosToRender.map(photo => <img className={`${styles.photo}`} src={photo.src} key={photo.previewId} />)}
+      <div className={`grid grid-cols-4 gap-4 my-4 mx-auto 1080:grid-cols-5 1280:grid-cols-6 1440:grid-cols-7 1920:grid-cols-8`}>
+        {photosToRender.map(photo => <img className={`w-44 h-44 object-cover rounded-lg 1920:w-48 1920:h-48`} src={photo.src} key={photo.previewId} />)}
         {/* {
           !isLoading ?
             <PhotoList
