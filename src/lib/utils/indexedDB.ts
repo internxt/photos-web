@@ -15,8 +15,9 @@ export const createObjectStore = async (tableNames: string[]) => {
       },
     })
     console.log('db created =>', dataBase)
+    return dataBase
   } catch (error) {
-    console.log('catch', error)
+    console.log('database catch', error)
     return false
   }
 }

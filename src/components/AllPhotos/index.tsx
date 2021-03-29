@@ -1,57 +1,51 @@
 import { IDBPDatabase, openDB } from "idb";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import { getAllValues, getValue } from "../../lib/utils/indexedDB";
 import { downloadPreviews } from "../../screens/Home/init";
 import styles from './AllPhotos.module.scss'
 
 export interface AllPhotosProps {
-
+  dataBase: IDBPDatabase<unknown>,
 }
 
-const AllPhotos = () => {
+const AllPhotos = (props: AllPhotosProps) => {
   const [photosToRender, setPhotosToRender] = useState<Array<any>>([])
-  const [uploadedPhotos, setUploadedPhotos] = useState()
-  const [isDownloading, setIsDownloading] = useState(false)
+  const history = useHistory()
 
-  // push the last downloaded preview to the existing array
-  const getPreviewFromDB = (dataBase: IDBPDatabase<unknown>, previewId: string): void => {
-    getValue('photos', previewId, dataBase).then(photo => {
+  const getPreviewFromDB = (previewId: string): void => {
+    getValue('photos', previewId, props.dataBase).then(photo => {
       if (photo) {
-        setPhotosToRender(prevState => [...prevState, photo])
+        const preview = {
+          ...photo,
+          src: URL.createObjectURL(photo.blob)
+        }
+        setPhotosToRender(prevState => [...prevState, preview])
       }
     })
   }
 
   useEffect(() => {
-    openDB('test2').then(db => {
-      console.log('dataBase opened =>', db)
-
-      // get all stored photos in the database on first render
-      getAllValues('photos', db).then(photos => {
-        console.log('all photos useEffect =>', photos.length)
-        setPhotosToRender(photos)
-      })
-
-      // start downloading the previews
-      downloadPreviews(db, getPreviewFromDB).then(previews => {
-        setUploadedPhotos(previews)
-      }).catch((err) => {
-        console.log('getPreviews catch =>', err)
-      }).finally(() => {
-        setIsDownloading(false)
-      })
-    })
+    getAllValues('photos', props.dataBase).then(photos => {
+      return photos.map(photo => ({ ...photo, src: URL.createObjectURL(photo.blob) }))
+    }).then(previews => setPhotosToRender(previews))
+      .then(() => downloadPreviews(props.dataBase, getPreviewFromDB))
+      .catch(err => console.log('getAllValues catch =>', err))
   }, [])
 
   return (
     <div className={`home-container`}>
       <div className={`home-titleContainer`}>
-        <h1 className={`home-title`}>All photos</h1>
+        <span className={`home-title`}
+          onClick={() => {
+            history.push('gallery')
+          }}
+        >All photos</span>
 
         <span className={`home-filter`}>Filter</span>
       </div>
 
-      <div className={`list-group list-group-horizontal overflow-auto pl-3 pr-3`}>
+      <div className={`list-group list-group-horizontal overflow-auto ml-3 mr-3`}>
         {
           photosToRender.length > 0 ?
             photosToRender.map((photo: any) => (<img className={`${styles.photo}`} src={photo.src} key={photo.previewId} />))
