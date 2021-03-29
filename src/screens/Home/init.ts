@@ -81,12 +81,14 @@ export async function downloadPreview(preview: any, dataBase: IDBPDatabase<unkno
 
   const newPreview = await fetch(`${process.env.REACT_APP_PRODUCTION_API_URL}/api/photos/storage/previews/${previewId}`, { method: 'GET', headers: h })
   const blob = await newPreview.blob()
+  
   const url = URL.createObjectURL(blob)
   const objectToStore = { src: url, type: 'image/jpeg', previewId }
+  const testObject = { blob: blob, type: 'image/jpeg', previewId }
   const existsPreview = await dataBase.get('photos', previewId)
 
   if (!existsPreview) {
-    await putValue('photos', objectToStore, dataBase)
+    await putValue('photos', testObject, dataBase)
     return false
   }
   return true
