@@ -1,34 +1,41 @@
-import { IDBPDatabase, openDB } from "idb";
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router";
-import { getAllValues, getValue } from "../../lib/utils/indexedDB";
-import { downloadPreviews } from "../../screens/Home/init";
-import styles from './AllPhotos.module.scss'
+import { IDBPDatabase, openDB } from "idb"
+import { useEffect, useState } from "react"
+import { useHistory } from "react-router"
+import { getAllValues, getValue } from "../../lib/utils/indexedDB"
+import { downloadPreviews } from "../../screens/Home/init"
+import Photo from "../Photo"
 
-export interface AllPhotosProps {
+interface AllPhotosProps {
   dataBase: IDBPDatabase<unknown>,
 }
 
+interface IPreview {
+  blob: Blob,
+  type: string,
+  previewId: string
+}
+
+export interface IRenderablePreview extends IPreview {
+  src: string
+}
+
 const AllPhotos = (props: AllPhotosProps) => {
-  const [photosToRender, setPhotosToRender] = useState<Array<any>>([])
+  const [photosToRender, setPhotosToRender] = useState<IRenderablePreview[]>([])
   const history = useHistory()
 
   const getPreviewFromDB = (previewId: string): void => {
-    getValue('photos', previewId, props.dataBase).then(photo => {
+    getValue('photos', previewId, props.dataBase).then((photo: IPreview) => {
       if (photo) {
-        const preview = {
-          ...photo,
-          src: URL.createObjectURL(photo.blob)
-        }
+        const preview: IRenderablePreview = { ...photo, src: URL.createObjectURL(photo.blob) }
         setPhotosToRender(prevState => [...prevState, preview])
       }
     })
   }
 
   useEffect(() => {
-    getAllValues('photos', props.dataBase).then(photos => {
+    getAllValues('photos', props.dataBase).then((photos: IPreview[]) => {
       return photos.map(photo => ({ ...photo, src: URL.createObjectURL(photo.blob) }))
-    }).then(previews => setPhotosToRender(previews))
+    }).then((previews: IRenderablePreview[]) => setPhotosToRender(previews))
       .then(() => downloadPreviews(props.dataBase, getPreviewFromDB))
       .catch(err => console.log('getAllValues catch =>', err))
   }, [])
@@ -48,7 +55,7 @@ const AllPhotos = (props: AllPhotosProps) => {
       <div className={`list-group list-group-horizontal overflow-auto ml-3 mr-3`}>
         {
           photosToRender.length > 0 ?
-            photosToRender.map((photo: any) => (<img className={`${styles.photo}`} src={photo.src} key={photo.previewId} />))
+            photosToRender.map(photo => <Photo photo={photo} />)
             :
             <span>chill bro you dont have photos</span>
         }

@@ -18,7 +18,7 @@ const Home = (props: HomeProps) => {
         showSettingsButton={true}
       />
 
-      <Albums />
+      {/* <Albums /> */}
 
       <AllPhotos dataBase={props.dataBase} />
 
