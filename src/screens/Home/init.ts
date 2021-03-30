@@ -83,12 +83,11 @@ export async function downloadPreview(preview: any, dataBase: IDBPDatabase<unkno
   const blob = await newPreview.blob()
   
   const url = URL.createObjectURL(blob)
-  const objectToStore = { src: url, type: 'image/jpeg', previewId }
-  const testObject = { blob: blob, type: 'image/jpeg', previewId }
+  const objectToStore = { blob: blob, type: 'image/jpeg', previewId }
   const existsPreview = await dataBase.get('photos', previewId)
 
   if (!existsPreview) {
-    await putValue('photos', testObject, dataBase)
+    await putValue('photos', objectToStore, dataBase)
     return false
   }
   return true
