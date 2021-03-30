@@ -1,16 +1,15 @@
-import { IDBPDatabase, openDB } from "idb";
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router";
-import { getAllValues, getValue } from "../../lib/utils/indexedDB";
-import { downloadPreviews } from "../../screens/Home/init";
-import Photo from "../Photo";
-import styles from './AllPhotos.module.scss'
+import { IDBPDatabase, openDB } from "idb"
+import { useEffect, useState } from "react"
+import { useHistory } from "react-router"
+import { getAllValues, getValue } from "../../lib/utils/indexedDB"
+import { downloadPreviews } from "../../screens/Home/init"
+import Photo from "../Photo"
 
 interface AllPhotosProps {
   dataBase: IDBPDatabase<unknown>,
 }
 
-export interface IPreview {
+interface IPreview {
   blob: Blob,
   type: string,
   previewId: string
