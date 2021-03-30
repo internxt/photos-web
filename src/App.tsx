@@ -9,6 +9,7 @@ import New from './screens/Login/New'
 import PhotoGallery from './screens/PhotoGallery'
 import { createObjectStore } from './lib/utils/indexedDB'
 import { toast } from 'react-toastify'
+import CreateAlbum from './screens/CreateAlbum'
 
 interface IUser {
 
@@ -48,6 +49,8 @@ function App() {
           <Route path='/app' render={() => <Home dataBase={db} />} />
 
           <Route path='/gallery' render={() => <PhotoGallery dataBase={db} />} />
+
+          <Route path='/create-album' render={() => <CreateAlbum />} />
 
           <Route exact path='/'>
             <Redirect to="/login" />

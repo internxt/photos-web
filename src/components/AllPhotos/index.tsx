@@ -55,7 +55,7 @@ const AllPhotos = (props: AllPhotosProps) => {
       <div className={`list-group list-group-horizontal overflow-auto ml-3 mr-3`}>
         {
           photosToRender.length > 0 ?
-            photosToRender.map(photo => <Photo photo={photo} />)
+            photosToRender.map(photo => <Photo photo={photo} isSelective={false} />)
             :
             <span>chill bro you dont have photos</span>
         }
