@@ -40,7 +40,7 @@ const PhotoGallery = (props: PhotoGalleryProps) => {
           </span>
       </div>
 
-      <div className={`grid grid-cols-4 gap-4 my-4 mx-auto 1080:grid-cols-5 1280:grid-cols-6 1440:grid-cols-7 1920:grid-cols-8`}>
+      <div className={`grid grid-cols-4 gap-4 my-4 mx-auto 1080:grid-cols-5 1280:grid-cols-6 1440:grid-cols-7 1920:grid-cols-8 overflow-auto`}>
         {
           !isLoading ?
             photosToRender.map(photo => <Photo style={`w-44 h-44 object-cover rounded-lg hover:opacity-70 cursor-pointer 1920:w-48 1920:h-48`} photo={photo} />)

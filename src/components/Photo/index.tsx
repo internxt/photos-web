@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IRenderablePreview } from '../AllPhotos'
 import ImageViewer from './ImageViewer'
 import styles from './Photo.module.scss'
+import disableScroll from 'disable-scroll'
 
 export interface PhotoProps {
   photo: IRenderablePreview,
@@ -15,6 +16,11 @@ const Photo = (props: PhotoProps) => {
     console.log('photo onClick =>', props.photo)
     setIsHidden(!isHidden)
   }
+
+  useEffect(() => {
+    if (!isHidden) disableScroll.on()
+    else disableScroll.off()  
+  }, [isHidden])
 
   return (
     <div>
