@@ -4,7 +4,8 @@ import ImageViewer from './ImageViewer'
 import styles from './Photo.module.scss'
 
 export interface PhotoProps {
-  photo: IRenderablePreview
+  photo: IRenderablePreview,
+  style?: string
 }
 
 const Photo = (props: PhotoProps) => {
@@ -18,7 +19,7 @@ const Photo = (props: PhotoProps) => {
   return (
     <div>
       <ImageViewer isHidden={isHidden} handleClick={handleClick} photo={props.photo} />
-      <img className={`${styles.photo}`} src={props.photo.src} key={props.photo.previewId} onClick={handleClick} />
+      <img className={props.style ? props.style : `${styles.photo}`} src={props.photo.src} key={props.photo.previewId} onClick={handleClick} />
     </div>
 
   )

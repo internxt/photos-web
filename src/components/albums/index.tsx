@@ -1,25 +1,10 @@
 import { useEffect, useState } from "react";
 import AlbumCard, { IAlbum } from "./AlbumCard";
-import a from '../../assets/images/1.jpg'
-import b from '../../assets/images/2.jpg'
-import c from '../../assets/images/3.jpg'
-import d from '../../assets/images/4.jpg'
-import e from '../../assets/images/5.jpg'
-import f from '../../assets/images/6.jpg'
-import g from '../../assets/images/7.jpg'
-import h from '../../assets/images/8.jpg'
-import i from '../../assets/images/9.jpg'
-import j from '../../assets/images/10.jpg'
-import k from '../../assets/images/11.jpg'
-import l from '../../assets/images/12.jpg'
-import m from '../../assets/images/13.jpg'
-import n from '../../assets/images/14.jpg'
-import o from '../../assets/images/15.jpg'
 import CreateAlbumCard from "./CreateAlbumCard";
 
 const Albums = () => {
   const [albums, setAlbums] = useState<IAlbum[]>([])
-  const albumes: IAlbum[] = [
+  /* const albumes: IAlbum[] = [
     {
       title: 'Random shit', photos: [
         { bucketId: '1', fileId: '1', id: 1, userId: 1, createdAt: '123', updatedAt: '123', name: 'image', hash: 'd', size: 200, type: 'jpg', photosalbums: {}, localUri: a },
@@ -84,7 +69,7 @@ const Albums = () => {
         { bucketId: '1', fileId: '1', id: 1, userId: 1, createdAt: '123', updatedAt: '123', name: 'image', hash: 'd', size: 200, type: 'jpg', photosalbums: {}, localUri: o },
       ]
     }
-  ]
+  ] */
 
   useEffect(() => {
     /* getAlbums().then(res => {
@@ -104,7 +89,7 @@ const Albums = () => {
       {
         albums.length > 0 ?
           <div className={`list-group list-group-horizontal overflow-auto pl-3 pr-3`}>
-            {albumes.map(album => (<AlbumCard album={album} key={Math.random() * 10000000} />))}
+            {albums.map(album => (<AlbumCard album={album} key={Math.random() * 10000000} />))}
           </div>
           :
           <CreateAlbumCard />

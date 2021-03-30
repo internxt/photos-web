@@ -3,6 +3,7 @@ import Header from '../../layout/Header';
 import AllPhotos from '../../components/AllPhotos';
 import { useState } from 'react';
 import { IDBPDatabase } from 'idb';
+import Albums from '../../components/Albums';
 
 interface HomeProps {
   dataBase: IDBPDatabase<unknown>
@@ -18,7 +19,7 @@ const Home = (props: HomeProps) => {
         showSettingsButton={true}
       />
 
-      {/* <Albums /> */}
+      <Albums />
 
       <AllPhotos dataBase={props.dataBase} />
 
