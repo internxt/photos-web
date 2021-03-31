@@ -46,9 +46,9 @@ function App() {
 
           <Route exact path='/new' render={(historyProps: any) => <New isNewUser={true} isAuthenticated={isAuthenticated} handleKeySaved={handleKeySaved} {...historyProps} />} />
 
-          <Route path='/app' render={() => <Home dataBase={db} />} />
+          <Route path='/app' render={() => <Home database={db} />} />
 
-          <Route path='/gallery' render={() => <PhotoGallery dataBase={db} />} />
+          <Route path='/gallery' render={() => <PhotoGallery database={db} />} />
 
           <Route path='/create-album' render={() => <CreateAlbum />} />
 

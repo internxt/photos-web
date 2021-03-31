@@ -6,7 +6,7 @@ import { IDBPDatabase } from 'idb';
 import Albums from '../../components/Albums';
 
 interface HomeProps {
-  dataBase: IDBPDatabase<unknown>
+  database: IDBPDatabase<unknown>
 }
 
 const Home = (props: HomeProps) => {
@@ -19,9 +19,9 @@ const Home = (props: HomeProps) => {
         showSettingsButton={true}
       />
 
-      <Albums />
+      <Albums database={props.database} />
 
-      <AllPhotos dataBase={props.dataBase} />
+      <AllPhotos database={props.database} />
 
       <div className={`${styles.container} ${styles.deleted}`}>deleted photos</div>
     </div>

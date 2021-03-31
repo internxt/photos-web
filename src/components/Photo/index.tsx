@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { IRenderablePreview } from '../AllPhotos'
 import ImageViewer from './ImageViewer'
 import styles from './Photo.module.scss'
 import disableScroll from 'disable-scroll'
+import { IRenderablePreview } from '../../lib/types/photos'
 
 export interface PhotoProps {
   photo: IRenderablePreview,
@@ -16,7 +16,6 @@ const Photo = (props: PhotoProps) => {
   const [isSelected, setIsSelected] = useState(false)
 
   const handleClick = () => {
-    console.log('photo onClick =>', props.photo)
     setIsHidden(!isHidden)
   }
 
@@ -37,8 +36,9 @@ const Photo = (props: PhotoProps) => {
     return (
       <div
         onClick={() => {
+          console.log('photo on click =>', props.photo)
           setIsSelected(!isSelected)
-          //props.handleSelection(props.photo.previewId)
+          props.handleSelection ? props.handleSelection(props.photo.originalPhotoId) : null
         }}
       >
         <div className={isSelected ? `${styles.filled} ${styles.iconBackground}` : styles.iconBackground}>

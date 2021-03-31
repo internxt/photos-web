@@ -8,7 +8,7 @@ import ActivityIndicator from '../../components/ActivityIndicator'
 import Photo from '../../components/Photo';
 
 interface PhotoGalleryProps {
-  dataBase: IDBPDatabase<unknown>
+  database: IDBPDatabase<unknown>
 }
 
 const PhotoGallery = (props: PhotoGalleryProps) => {

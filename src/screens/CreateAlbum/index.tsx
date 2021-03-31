@@ -1,11 +1,10 @@
 import { openDB } from "idb"
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import { IRenderablePreview } from "../../components/AllPhotos"
 import Photo from "../../components/Photo"
-import { IApiPreview } from "../../lib/types/photos"
 import { getAllValues } from "../../lib/utils/indexedDB"
 import styles from './CreateAlbum.module.scss'
+import { IRenderablePreview, IStoredPreview } from '../../lib/types/photos'
 
 const CreateAlbum = () => {
   const [photos, setPhotos] = useState<IRenderablePreview[]>([])
@@ -17,11 +16,10 @@ const CreateAlbum = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<any[]>([])
 
   useEffect(() => {
-    //getPreviews().then(res => setPhotos(res)).finally(() => setIsLoading(false))
     openDB('test2').then(db => {
-      getAllValues('photos', db).then(photos => {
+      getAllValues('photos', db).then((photos: IStoredPreview[]) => {
         return photos.map(photo => ({ ...photo, src: URL.createObjectURL(photo.blob) }))
-      }).then(previews => setPhotos(previews))
+      }).then((previews: IRenderablePreview[]) => setPhotos(previews))
         .finally(() => setIsLoading(false))
     })
   }, [])
@@ -39,13 +37,13 @@ const CreateAlbum = () => {
       'internxt-mnemonic': process.env.REACT_APP_MNEMONIC
     }
 
-    return fetch(`${process.env.REACT_NATIVE_API_URL}/api/photos/album`, {
+    return fetch(`${process.env.REACT_APP_PRODUCTION_API_URL}/api/photos/album`, {
       method: 'POST',
       headers: h,
       body: JSON.stringify(body)
     }).then(res => {
       return res.json()
-    })
+    }).then(res => console.log('POST album =>', res))
   }
 
   const handleSelection = (selectedPhotoId: number) => {
@@ -63,15 +61,30 @@ const CreateAlbum = () => {
     }
   }
 
-  const handlePress = () => {
-    // reset all selected photos
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    console.log('album title:', albumTitle, 'selected photos:', selectedPhotos)
+    if (albumTitle) {
+      if (albumTitle.length > 30) {
+        toast.warn('Maximum album length name is 30 characters')
+      } else {
+        if (selectedPhotos.length > 0) {
+          setIsCreatingAlbum(true)
+          uploadAlbum().then(() => setSelectedPhotos([])).finally(() => setIsCreatingAlbum(false))
+        } else {
+          toast.warn('You need to select at least one photo')
+        }
+      }
+    } else {
+      toast.warn('Album name is required')
+    }
   }
-
-  //const renderItem = (item: IApiPreview, index: number) => (<SelectivePhoto photo={item} handleSelection={handleSelection} handleLongPress={handleLongPress} key={index} />)
 
   return (
     <div className={`${styles.container}`}>
-      <div className={`${styles.inputContainer}`}>
+      <form className={`${styles.inputContainer}`}
+        onSubmit={handleSubmit}
+      >
         <input className={`${styles.input}`}
           placeholder='Name your memories'
           value={albumTitle}
@@ -79,29 +92,10 @@ const CreateAlbum = () => {
           onChange={e => setAlbumTitle(e.target.value)}
         />
 
-        <button className={!isCreatingAlbum ? `${styles.button}` : `${styles.button} ${styles.disabled}`}
-          disabled={isCreatingAlbum}
-          onSubmit={() => {
-            if (albumTitle) {
-              if (albumTitle.length > 30) {
-                toast.warn('Maximum album length name is 30 characters')
-              } else {
-                if (selectedPhotos.length > 0) {
-                  setIsCreatingAlbum(true)
-                  uploadAlbum().finally(() => setIsCreatingAlbum(false))
-                  handlePress()
-                } else {
-                  toast.warn('You need to select at least one photo')
-                }
-              }
-            } else {
-              toast.warn('Album name is required')
-            }
-          }}
-        >
+        <button className={!isCreatingAlbum ? `${styles.button}` : `${styles.button} ${styles.disabled}`} disabled={isCreatingAlbum} type='submit' >
           <span className={`${styles.buttonText}`}>Done</span>
         </button>
-      </div>
+      </form>
 
       <span className={`${styles.title}`}>
         Select photos to create album
@@ -111,7 +105,7 @@ const CreateAlbum = () => {
         {
           !isLoading ?
             !isCreatingAlbum ?
-              photos.map(photo => <Photo style={`w-44 h-44 object-cover rounded-lg hover:opacity-70 cursor-pointer 1920:w-48 1920:h-48`} photo={photo} isSelective={true} />)
+              photos.map(photo => <Photo style={`w-44 h-44 object-cover rounded-lg hover:opacity-70 cursor-pointer 1920:w-48 1920:h-48`} photo={photo} isSelective={true} handleSelection={handleSelection} />)
               :
               <span>creating album</span>
             :

@@ -1,7 +1,13 @@
+.mainContainer {
+  padding-top: 1rem;
+  width: 450px;
+}
+
 .card {
   background-color: #fff;
   display: flex;
   min-width: 411px;
+  width: 411px;
   max-height: 249px;
   margin-right: 24px;
   margin-bottom: 8px;
@@ -22,11 +28,14 @@
 .albumCover {
   display: flex;
   flex-direction: column;
+  min-width: 158px;
+  min-height: 158px;
+
 }
 
 .primaryCoverPhoto {
-  height: 158px;
-  width: 158px;
+  max-height: 158px;
+  max-width: 158px;
   object-fit: cover;
   border-top-left-radius: 6px;
   margin: 0 4px 4px 0;

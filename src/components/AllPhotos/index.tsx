@@ -1,22 +1,13 @@
 import { IDBPDatabase, openDB } from "idb"
 import { useEffect, useState } from "react"
 import { useHistory } from "react-router"
+import { IRenderablePreview, IStoredPreview } from "../../lib/types/photos"
 import { getAllValues, getValue } from "../../lib/utils/indexedDB"
 import { downloadPreviews } from "../../screens/Home/init"
 import Photo from "../Photo"
 
 interface AllPhotosProps {
-  dataBase: IDBPDatabase<unknown>,
-}
-
-interface IPreview {
-  blob: Blob,
-  type: string,
-  previewId: string
-}
-
-export interface IRenderablePreview extends IPreview {
-  src: string
+  database: IDBPDatabase<unknown>,
 }
 
 const AllPhotos = (props: AllPhotosProps) => {
@@ -24,7 +15,7 @@ const AllPhotos = (props: AllPhotosProps) => {
   const history = useHistory()
 
   const getPreviewFromDB = (previewId: string): void => {
-    getValue('photos', previewId, props.dataBase).then((photo: IPreview) => {
+    getValue('photos', previewId, props.database).then((photo: IStoredPreview) => {
       if (photo) {
         const preview: IRenderablePreview = { ...photo, src: URL.createObjectURL(photo.blob) }
         setPhotosToRender(prevState => [...prevState, preview])
@@ -33,10 +24,10 @@ const AllPhotos = (props: AllPhotosProps) => {
   }
 
   useEffect(() => {
-    getAllValues('photos', props.dataBase).then((photos: IPreview[]) => {
+    getAllValues('photos', props.database).then((photos: IStoredPreview[]) => {
       return photos.map(photo => ({ ...photo, src: URL.createObjectURL(photo.blob) }))
     }).then((previews: IRenderablePreview[]) => setPhotosToRender(previews))
-      .then(() => downloadPreviews(props.dataBase, getPreviewFromDB))
+      .then(() => downloadPreviews(props.database, getPreviewFromDB))
       .catch(err => console.log('getAllValues catch =>', err))
   }, [])
 

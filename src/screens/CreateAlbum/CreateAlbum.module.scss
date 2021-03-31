@@ -10,21 +10,6 @@
   margin: 24px 0 0;
 }
 
-.title {
-  color: black;
-  font-family: CerebriSans-Bold;
-  font-size: 24px;
-  margin: 24px 0 0 32px;
-}
-
-.disabled {
-  background-color: #73bbff;
-}
-
-.flatList {
-  padding: 0 8px;
-}
-
 .input {
   color: #000000;
   font-family: CerebriSans-SemiBold;
@@ -43,9 +28,23 @@
   padding: 6px 18px;
 }
 
+.button:hover {
+  background-color: #0071db;
+}
+
 .buttonText {
   color: white;
   font-family: CerebriSans-SemiBold;
   font-size: 16px;
 }
 
+.disabled {
+  background-color: #73bbff;
+}
+
+.title {
+  color: black;
+  font-family: CerebriSans-Bold;
+  font-size: 24px;
+  margin: 24px 0 0 32px;
+}

@@ -232,7 +232,6 @@ const Login = (props: ILogin) => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    console.log('submit')
     setIsLogging(true)
     check2FANeeded()
   }
