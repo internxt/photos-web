@@ -6,8 +6,8 @@
 .card {
   background-color: #fff;
   display: flex;
-  min-width: 411px;
-  width: 411px;
+  min-width: 405px;
+  width: 405px;
   max-height: 249px;
   margin-right: 24px;
   margin-bottom: 8px;
@@ -83,6 +83,11 @@
   height: 77px;
   background-color: #F7F5F7;
   margin: 0 4px 4px 0;
+}
+
+.cover {
+  width: 154px;
+  height: 158px;
 }
 
 .albumTitle {

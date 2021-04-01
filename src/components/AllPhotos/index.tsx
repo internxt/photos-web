@@ -8,28 +8,11 @@ import Photo from "../Photo"
 
 interface AllPhotosProps {
   database: IDBPDatabase<unknown>,
+  photosToRender: IRenderablePreview[]
 }
 
 const AllPhotos = (props: AllPhotosProps) => {
-  const [photosToRender, setPhotosToRender] = useState<IRenderablePreview[]>([])
   const history = useHistory()
-
-  const getPreviewFromDB = (previewId: string): void => {
-    getValue('photos', previewId, props.database).then((photo: IStoredPreview) => {
-      if (photo) {
-        const preview: IRenderablePreview = { ...photo, src: URL.createObjectURL(photo.blob) }
-        setPhotosToRender(prevState => [...prevState, preview])
-      }
-    })
-  }
-
-  useEffect(() => {
-    getAllValues('photos', props.database).then((photos: IStoredPreview[]) => {
-      return photos.map(photo => ({ ...photo, src: URL.createObjectURL(photo.blob) }))
-    }).then((previews: IRenderablePreview[]) => setPhotosToRender(previews))
-      .then(() => downloadPreviews(props.database, getPreviewFromDB))
-      .catch(err => console.log('getAllValues catch =>', err))
-  }, [])
 
   return (
     <div className={`home-container`}>
@@ -45,8 +28,8 @@ const AllPhotos = (props: AllPhotosProps) => {
 
       <div className={`list-group list-group-horizontal overflow-auto ml-3 mr-3`}>
         {
-          photosToRender.length > 0 ?
-            photosToRender.map(photo => <Photo photo={photo} isSelective={false} />)
+          props.photosToRender.length > 0 ?
+            props.photosToRender.map(photo => <Photo photo={photo} isSelective={false} key={photo.previewId} />)
             :
             <span>chill bro you dont have photos</span>
         }
