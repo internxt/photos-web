@@ -16,7 +16,7 @@ const Photo = (props: PhotoProps) => {
   const [isHidden, setIsHidden] = useState(true)
   const [isSelected, setIsSelected] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
-  const [originalPhoto, setOriginalPhoto] = useState('')
+  const [downloadedBlob, setDownloadedBlob] = useState<Blob>()
   const [tempDownloadedPhoto, setTempDownloadedPhoto] = useState('')
 
   const handleClick = () => {
@@ -35,7 +35,7 @@ const Photo = (props: PhotoProps) => {
   }
 
   const handlePhotoDownload = () => {
-    if (tempDownloadedPhoto) fileDownload(tempDownloadedPhoto, props.photo.originalPhotoName)
+    if (downloadedBlob) fileDownload(downloadedBlob, props.photo.originalPhotoName + '.' + props.photo.originalPhotoType)
   }
 
   const downloadPhoto = (photo: IRenderablePreview) => {
@@ -51,6 +51,7 @@ const Photo = (props: PhotoProps) => {
     return fetch(`${process.env.REACT_APP_PRODUCTION_API_URL}/api/photos/storage/photo/${photoId}`, { headers: h })
       .then(photo => photo.blob())
       .then(blob => {
+        setDownloadedBlob(blob)
         return URL.createObjectURL(blob)
       })
   }
@@ -63,7 +64,7 @@ const Photo = (props: PhotoProps) => {
   if (!props.isSelective) {
     return (
       <div>
-        <ImageViewer isHidden={isHidden} handleClick={handleClick} src={tempDownloadedPhoto} />
+        <ImageViewer isHidden={isHidden} handleClick={handleClick} handlePhotoDownload={handlePhotoDownload} src={tempDownloadedPhoto} />
 
         <img className={props.style ? props.style : `${styles.photo}`} src={props.photo.src} key={props.photo.previewId} onClick={handleClick} />
       </div>
