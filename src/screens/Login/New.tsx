@@ -82,7 +82,7 @@ const New = (props: NewProps & NewState) => {
     //Datas
     const encPrivateKey = aes.encrypt(privateKeyArmored, formInputValues.password, false);
 
-    return fetch('/api/register', {
+    return fetch(`${process.env.REACT_APP_API_URL}/api/register`, {
       method: 'post',
       headers: getHeaders(true, true),
       body: JSON.stringify({
@@ -115,7 +115,6 @@ const New = (props: NewProps & NewState) => {
           initializeUser(formInputValues.email, user.mnemonic, encPass).then((rootFolderInfo) => {
             user.root_folder_id = rootFolderInfo.user.root_folder_id;
             Settings.set('xUser', JSON.stringify(user));
-            history.push('/login');
           })
         })
       } else {
