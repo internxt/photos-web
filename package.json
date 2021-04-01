@@ -23,6 +23,7 @@
     "disable-scroll": "^0.6.0",
     "dotenv": "^8.2.0",
     "idb": "^6.0.0",
+    "js-file-download": "^0.4.12",
     "node-sass": "^5.0.0",
     "openpgp": "^5.0.0-1",
     "prettysize": "^2.0.0",

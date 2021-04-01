@@ -34,6 +34,7 @@ export interface IApiUploadedPhoto {
   fileId: string,
   hash: string | null,
   id: number,
+  name: string,
   preview: IApiPreview,
   size: number,
   type: string,
@@ -44,7 +45,8 @@ export interface IApiUploadedPhoto {
 export interface IStoredPreview {
   blob: Blob,
   originalPhotoId: number,
-  previewId: string
+  previewId: string,
+  originalPhotoName: string
 }
 
 export interface IRenderablePreview extends IStoredPreview {
