@@ -82,7 +82,7 @@ export async function downloadPreview(uploadedPhoto: IApiUploadedPhoto, dataBase
   try {
     const newPreview = await fetch(`${process.env.REACT_APP_PRODUCTION_API_URL}/api/photos/storage/previews/${previewId}`, { method: 'GET', headers: h })
     const blob = await newPreview.blob()
-    const objectToStore = { blob: blob, originalPhotoId: uploadedPhoto.id, previewId, originalPhotoName: uploadedPhoto.name }
+    const objectToStore = { blob: blob, originalPhotoId: uploadedPhoto.id, previewId, originalPhotoType: uploadedPhoto.type, originalPhotoName: uploadedPhoto.name }
     const existsPreview = await dataBase.get('photos', previewId)
 
     if (!existsPreview) {

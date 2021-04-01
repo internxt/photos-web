@@ -46,7 +46,8 @@ export interface IStoredPreview {
   blob: Blob,
   originalPhotoId: number,
   previewId: string,
-  originalPhotoName: string
+  originalPhotoName: string,
+  originalPhotoType: string
 }
 
 export interface IRenderablePreview extends IStoredPreview {
