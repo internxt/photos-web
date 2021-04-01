@@ -1,0 +1,39 @@
+.photo {
+  width: 120px;
+  height: 120px;
+  min-width: 120px;
+  object-fit: cover;
+  margin: 0 6px 6px 0;
+  border-radius: 6px;
+}
+
+.photo:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.iconBackground {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #4585f5;
+  border-radius: 15px;
+  margin-left: 8px;
+  margin-top: 8px;
+  position: absolute;
+  z-index: 1
+}
+
+.icon {
+  color: white;
+}
+
+.filled {
+  background-color: #4585f5;
+}
+
+.hidden {
+  display: none;
+}

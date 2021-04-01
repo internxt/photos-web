@@ -1,96 +1,103 @@
 import styles from './albumCard.module.scss'
-import { useEffect, useState } from 'react';
-
-export interface IAlbum {
-  title: string,
-  createdAt?: string,
-  updatedAt?: string,
-  id?: number,
-  name?: string,
-  photos: IAlbumPhoto[],
-  userId?: string
-}
-
-interface IAlbumPhoto {
-  bucketId: string,
-  fileId: string,
-  id: number,
-  userId: number,
-  createdAt: string,
-  updatedAt: string,
-  name: string,
-  hash: string,
-  size: number,
-  type: string,
-  photosalbums: any,
-  localUri?: string
-}
+import { useEffect, useState } from 'react'
+import { IDBPDatabase } from 'idb'
+import { getAllValues } from '../../lib/utils/indexedDB'
+import { IRenderablePreview, IStoredPreview } from '../../lib/types/photos'
+import { IAlbum } from '../../lib/types/albums'
 
 interface AlbumCardProps {
-  album: IAlbum
+  album: IAlbum,
+  database: IDBPDatabase<unknown>,
+  photosToRender: IRenderablePreview[]
 }
 
 const AlbumCard = (props: AlbumCardProps) => {
-  const [photos, setPhotos] = useState(props.album.photos)
-  const title = props.album.title
-  const coverPhoto = props.album.photos[0]
-  const [albumCoverPhotos, setAlbumCoverPhotos] = useState<IAlbumPhoto[]>([])
-  const [secondaryPhotos, setSecondaryPhotos] = useState<IAlbumPhoto[]>([])
-  const [emptyCoverSpaces, setEmptyCoverSpaces] = useState<unknown[]>([])
-  const [emptySecondarySpaces, setEmptySecondarySpaces] = useState<unknown[]>([])
+  const [albumPhotos, setAlbumPhotos] = useState(props.album.photos)
+  const title = props.album.name
+  const [coverPhoto, setCoverPhoto] = useState<any>()
+  const [coverPhotos, setCoverPhotos] = useState<IRenderablePreview[] | undefined>([])
+  const [secondaryPhotos, setSecondaryPhotos] = useState<IRenderablePreview[]>([])
+  const [emptyCoverSpaces, setEmptyCoverSpaces] = useState<any[]>([])
+  const [emptySecondarySpaces, setEmptySecondarySpaces] = useState<any[]>([])
 
-  // set the three main photos of the album and remove them from the rest of the array
   useEffect(() => {
-    console.log('album cards rendered')
-    let mainPhotos = []
-    let otherPhotos = []
+    if (props.photosToRender) {
+      // The albumCover is the first image selected by the user while creating the album
+      const albumCoverPhoto = props.photosToRender.find(preview => preview.originalPhotoId === albumPhotos[0].id)
+      let mainPhotos: IRenderablePreview[] | undefined = []
+      let otherPhotos: IRenderablePreview[] = []
 
-    if (photos.length >= 2) {
-      if (photos.length >= 3) {
-        mainPhotos = [photos[1], photos[2]]
-        otherPhotos = photos.slice(3)
+      if (albumPhotos.length >= 3) {
+        // The two main photos
+        mainPhotos = props.photosToRender.filter(preview => preview.originalPhotoId === albumPhotos[1].id || preview.originalPhotoId === albumPhotos[2].id)
+        
+        // Reduce the album array to create an object of objects with the id as a primary key
+        const newAlbumPhotos = albumPhotos.slice(3)
+        const lookup = newAlbumPhotos.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {})
 
-      } else {
-        mainPhotos = [photos[1]]
-        otherPhotos = photos.slice(2)
+        // The rest of the photos
+        otherPhotos = props.photosToRender.filter(preview => lookup.hasOwnProperty(preview.originalPhotoId))
+      } else if (albumPhotos.length >= 2) {
+        const photo = props.photosToRender.find(preview => preview.originalPhotoId === albumPhotos[1].id)
+        mainPhotos = photo ? [photo] : undefined
       }
 
-      setAlbumCoverPhotos(mainPhotos)
-      setSecondaryPhotos(otherPhotos)
-    }
-    const gridSize = 9
-    const coverGridSize = 2
-    const emptySecondaryItems = Array.from({ length: gridSize - otherPhotos.length })
-    const emptyCoverItems = Array.from({ length: coverGridSize - mainPhotos.length })
+      const gridSize = 9
+      const coverGridSize = 2
+      const emptyCoverItems = Array.from({ length: coverGridSize - (mainPhotos ? mainPhotos.length : 0) })
+      const emptySecondaryItems = Array.from({ length: gridSize - otherPhotos.length })
 
-    setEmptyCoverSpaces(emptyCoverItems)
-    setEmptySecondarySpaces(emptySecondaryItems)
+      setCoverPhoto(albumCoverPhoto)
+      setCoverPhotos(mainPhotos)
+      setSecondaryPhotos(otherPhotos)
+      setEmptyCoverSpaces(emptyCoverItems)
+      setEmptySecondarySpaces(emptySecondaryItems)
+    }
+  }, [props.photosToRender])
+
+  useEffect(() => {
+    if (!props.photosToRender) {
+      const gridSize = 9
+      const coverGridSize = 2
+      const emptyCoverItems = Array.from({ length: coverGridSize })
+      const emptySecondaryItems = Array.from({ length: gridSize })
+
+      setEmptyCoverSpaces(emptyCoverItems)
+      setEmptySecondarySpaces(emptySecondaryItems)
+    }
   }, [])
 
-  const renderItem = (photo: IAlbumPhoto, index: number) => (<img className={ index === 0 ? `${styles.photo} ${styles.roundedBottomLeft}` : `${styles.photo}` } src={photo.localUri} key={Math.random() * 100000} />)
-  const renderEmptyItem = (_:any, index: number) => (<div key={index} className={`${styles.emptyItem}`}></div>)
+  const renderItem = (photo: IRenderablePreview, index: number) => <img className={index === 0 ? `${styles.photo} ${styles.roundedBottomLeft}` : `${styles.photo}`} src={photo.src} key={photo.previewId} />
+  const renderEmptyItem = (_?: any, index?: number) => <div key={index} className={`${styles.emptyItem}`}></div>
+  const previewNotYetDownloaded = () => <span className={`${styles.photo}`}>Preview yet not downloaded</span>
 
   return (
-    <div>
+    <div className={`${styles.mainContainer}`}>
       <div className={`${styles.card}`}>
         <div className={`${styles.albumCover}`}>
-          <img className={`${styles.primaryCoverPhoto}`} src={coverPhoto.localUri} />
+          {coverPhoto
+            ? <img className={`${styles.primaryCoverPhoto}`} src={coverPhoto?.src} />
+            : <div className={`${styles.emptyItem} ${styles.cover}`}></div>
+          }
+
 
           <div className={`${styles.secondaryCoverPhotos}`}>
-            { albumCoverPhotos.map(renderItem) }
-            { emptyCoverSpaces.map(renderEmptyItem) }
+            {coverPhotos && coverPhotos.length > 1
+              ? coverPhotos.map(renderItem)
+              : emptyCoverSpaces.map(renderEmptyItem)
+            }
           </div>
         </div>
 
         <div className={`${styles.photosList}`}>
-          { secondaryPhotos.map(renderItem) }
-          { secondaryPhotos.length < 9 ? emptySecondarySpaces.map(renderEmptyItem) : null }
+          {secondaryPhotos.map(renderItem)}
+          {secondaryPhotos.length < 9 ? emptySecondarySpaces.map(renderEmptyItem) : null}
         </div>
       </div>
 
-      <span className={styles.albumTitle}>{title} <span className={styles.albumSubtitle}>{photos.length} photos</span></span>
+      <span className={styles.albumTitle}>{title} <span className={styles.albumSubtitle}>{albumPhotos.length} photos</span></span>
     </div>
   )
 }
 
-export default AlbumCard;
+export default AlbumCard

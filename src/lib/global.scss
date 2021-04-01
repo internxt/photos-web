@@ -22,20 +22,29 @@ html {
 }
 
 .home-title {
-  align-self: center;
+  display: flex;
+  align-items: center;
   color: black;
   font-family: CerebriSans-Bold;
   font-size: 18px;
   height: 30px;
   letter-spacing: -0.13px;
+  margin-bottom: 0px;
+}
+
+.home-title:hover {
+  cursor: pointer;
+  opacity: 0.7;
 }
 
 .home-filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: CerebriSans-Semibold;
   font-size: 14px;
   letter-spacing: -0.13px;
   color: #bfbfbf;
-  align-self: flex-end;
   height: 30px;
   width: 50px;
 }
