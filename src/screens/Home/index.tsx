@@ -16,7 +16,7 @@ const Home = (props: HomeProps) => {
   const [photosToRender, setPhotosToRender] = useState<IRenderablePreview[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const getPreviewFromDB = (previewId: string): void => {
+  const getPreviewFromDB = (previewId: IDBValidKey | IDBKeyRange): void => {
     getValue('photos', previewId, props.database).then((photo: IStoredPreview) => {
       if (photo) {
         const preview: IRenderablePreview = { ...photo, src: URL.createObjectURL(photo.blob) }

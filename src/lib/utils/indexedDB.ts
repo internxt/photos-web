@@ -22,10 +22,11 @@ export const createObjectStore = async (tableNames: string[]) => {
   }
 }
 
-export const getValue = async (tableName: string, id: number | string, openedDataBase: IDBPDatabase<unknown>) => {
+export const getValue = async (tableName: string, id: IDBKeyRange | IDBValidKey, openedDataBase: IDBPDatabase<unknown>) => {
   const tx = openedDataBase.transaction(tableName, 'readonly')
   const store = tx.objectStore(tableName)
   const result = await store.get(id)
+  console.log(result, 'id:', id)
   return result
 }
 

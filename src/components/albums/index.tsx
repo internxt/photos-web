@@ -16,7 +16,6 @@ const Albums = (props: AlbumProps) => {
 
   useEffect(() => {
     getAlbums().then(albums => {
-      //console.log('albums =>', res)
       setAlbums(albums)
     })
   }, [])

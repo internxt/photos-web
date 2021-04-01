@@ -47,14 +47,12 @@ const Photo = (props: PhotoProps) => {
       'internxt-mnemonic': process.env.REACT_APP_MNEMONIC
     }
 
-    console.log('started download')
-    return fetch(`${process.env.REACT_APP_PRODUCTION_API_URL}/api/photos/storage/photo/${photoId}`, { headers: h }).then(photo => {
-      console.log('downloaded photo =>', photo)
-      return photo.blob()
-    }).then(blob => {
-      setTempDownloadedBlob(blob)
-      return URL.createObjectURL(blob)
-    })
+    return fetch(`${process.env.REACT_APP_PRODUCTION_API_URL}/api/photos/storage/photo/${photoId}`, { headers: h })
+      .then(photo => photo.blob())
+      .then(blob => {
+        setTempDownloadedBlob(blob)
+        return URL.createObjectURL(blob)
+      })
   }
 
   useEffect(() => {

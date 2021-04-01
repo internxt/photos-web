@@ -1,9 +1,6 @@
-import { IDBPDatabase, openDB } from "idb"
-import { useEffect, useState } from "react"
+import { IDBPDatabase } from "idb"
 import { useHistory } from "react-router"
-import { IRenderablePreview, IStoredPreview } from "../../lib/types/photos"
-import { getAllValues, getValue } from "../../lib/utils/indexedDB"
-import { downloadPreviews } from "../../screens/Home/init"
+import { IRenderablePreview } from "../../lib/types/photos"
 import Photo from "../Photo"
 
 interface AllPhotosProps {

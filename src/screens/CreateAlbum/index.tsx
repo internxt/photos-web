@@ -63,7 +63,7 @@ const CreateAlbum = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log('album title:', albumTitle, 'selected photos:', selectedPhotos)
+
     if (albumTitle) {
       if (albumTitle.length > 30) {
         toast.warn('Maximum album length name is 30 characters')
