@@ -1,0 +1,50 @@
+.container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.inputContainer {
+  display: flex;
+  align-self: center;
+  margin: 24px 0 0;
+}
+
+.input {
+  color: #000000;
+  font-family: CerebriSans-SemiBold;
+  font-size: 17px;
+  text-align: center;
+  width: 200px;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.button {
+  background-color: #0084ff;
+  border-radius: 23.8px;
+  padding: 6px 18px;
+}
+
+.button:hover {
+  background-color: #0071db;
+}
+
+.buttonText {
+  color: white;
+  font-family: CerebriSans-SemiBold;
+  font-size: 16px;
+}
+
+.disabled {
+  background-color: #73bbff;
+}
+
+.title {
+  color: black;
+  font-family: CerebriSans-Bold;
+  font-size: 24px;
+  margin: 24px 0 0 32px;
+}

@@ -1,6 +1,5 @@
+import { IRenderablePreview } from '../../lib/types/photos';
 import styles from './ImageViewer.module.scss'
-import { useEffect, useState } from 'react';
-import { IRenderablePreview } from '../AllPhotos';
 
 export interface ImageViewerProps {
   isHidden: boolean,
