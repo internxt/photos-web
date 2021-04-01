@@ -31,12 +31,13 @@ const AlbumCard = (props: AlbumCardProps) => {
       let secondaryRenderablePreviews: IRenderablePreview[] = []
 
       if (albumPhotos.length >= 3) {
+        // Reduce the album array to create an object of objects with the id as a primary key
         const lookup = albumPhotos.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {})
         console.log('lookup =>', lookup)
         // The two main photos
         mainPhotos = previews.filter(preview => preview.originalPhotoId === albumPhotos[1].id || preview.originalPhotoId === albumPhotos[2].id)
         // The rest of the photos
-        otherPhotos = previews.filter(photo => lookup.hasOwnProperty(photo.originalPhotoId))
+        otherPhotos = previews.filter(preview => lookup.hasOwnProperty(preview.originalPhotoId))
 
         // Transforming the blobs to render the filtered previews
         mainRenderablePreviews = mainPhotos.map(photo => ({ ...photo, src: URL.createObjectURL(photo.blob) }))
