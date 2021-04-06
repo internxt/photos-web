@@ -23,7 +23,7 @@ const AllPhotos = (props: AllPhotosProps) => {
         <span className={`home-filter`}>Filter</span>
       </div>
 
-      <div className={`list-group list-group-horizontal overflow-auto ml-3 mr-3`}>
+      <div className={`list-group list-group-horizontal overflow-auto ml-3 pr-3 horizontal-scrollbar`}>
         {
           props.photosToRender.length > 0 ?
             props.photosToRender.map(photo => <Photo photo={photo} isSelective={false} key={photo.previewId} />)
