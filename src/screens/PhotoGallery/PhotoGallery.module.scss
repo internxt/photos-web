@@ -4,6 +4,11 @@
   flex: 1;
 }
 
+.headerContainer {
+  display: flex;
+  flex-direction: row;
+}
+
 .titleContainer {
   display: flex;
   align-self: center;

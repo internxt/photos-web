@@ -6,6 +6,8 @@ import { getAllValues } from '../../lib/utils/indexedDB';
 import styles from './PhotoGallery.module.scss'
 import ActivityIndicator from '../../components/ActivityIndicator'
 import Photo from '../../components/Photo';
+import { IRenderablePreview } from '../../lib/types/photos';
+import Filter from '../../components/Filter';
 
 interface PhotoGalleryProps {
   database: IDBPDatabase<unknown>
@@ -13,7 +15,7 @@ interface PhotoGalleryProps {
 
 const PhotoGallery = (props: PhotoGalleryProps) => {
   const [isLoading, setIsLoading] = useState(true)
-  const [photosToRender, setPhotosToRender] = useState<any[]>([])
+  const [photosToRender, setPhotosToRender] = useState<IRenderablePreview[]>([])
   const [endCursor, setEndCursor] = useState<string | undefined>(undefined)
 
   useEffect(() => {
@@ -30,20 +32,24 @@ const PhotoGallery = (props: PhotoGalleryProps) => {
     <div className={styles.container}>
       <Header />
 
-      <div className={styles.titleContainer}>
-        <h1 className={styles.title}>
-          All photos {isLoading ? <ActivityIndicator /> : null}
-        </h1>
+      <div className={`${styles.headerContainer}`}>
+        <div className={styles.titleContainer}>
+          <h1 className={styles.title}>
+            All photos
+          </h1>
 
-        <span className={styles.photosCount}>
-          {photosToRender.length} Photos
+          <span className={styles.photosCount}>
+            {photosToRender.length} Photos
           </span>
+        </div>
+
+        <Filter />
       </div>
 
       <div className={`grid grid-cols-4 gap-4 my-4 mx-auto 1080:grid-cols-5 1280:grid-cols-6 1440:grid-cols-7 1920:grid-cols-8 overflow-auto`}>
         {
           !isLoading ?
-            photosToRender.map(photo => <Photo style={`w-44 h-44 object-cover rounded-lg hover:opacity-70 cursor-pointer 1920:w-48 1920:h-48`} photo={photo} isSelective={false} />)
+            photosToRender.map(photo => <Photo style={`w-44 h-44 object-cover rounded-lg hover:opacity-70 cursor-pointer 1920:w-48 1920:h-48`} photo={photo} isSelective={false} key={photo.previewId} />)
             :
             null
         }
