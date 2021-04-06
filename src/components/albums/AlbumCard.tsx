@@ -80,7 +80,6 @@ const AlbumCard = (props: AlbumCardProps) => {
             : <div className={`${styles.emptyItem} ${styles.cover}`}></div>
           }
 
-
           <div className={`${styles.secondaryCoverPhotos}`}>
             {coverPhotos && coverPhotos.length > 1
               ? coverPhotos.map(renderItem)
@@ -89,7 +88,7 @@ const AlbumCard = (props: AlbumCardProps) => {
           </div>
         </div>
 
-        <div className={`${styles.photosList}`}>
+        <div className={`${styles.photosList} scrollbar`}>
           {secondaryPhotos.map(renderItem)}
           {secondaryPhotos.length < 9 ? emptySecondarySpaces.map(renderEmptyItem) : null}
         </div>

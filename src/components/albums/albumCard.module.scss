@@ -6,13 +6,13 @@
 .card {
   background-color: #fff;
   display: flex;
-  min-width: 405px;
-  width: 405px;
+  min-width: 414px;
+  width: 414px;
   max-height: 249px;
   margin-right: 24px;
   margin-bottom: 8px;
   border-radius: 6px;
-  padding: 4px 0 0 4px;
+  padding: 4px 0 0;
   overflow: hidden;
 
   -webkit-box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.23);
@@ -38,7 +38,7 @@
   max-width: 158px;
   object-fit: cover;
   border-top-left-radius: 6px;
-  margin: 0 4px 4px 0;
+  margin: 0 0 4px 4px;
 }
 
 .secondaryCoverPhotos {
@@ -46,10 +46,11 @@
   flex-direction: row;
 }
 
-.smallPhoto {
-  width: 77px;
-  height: 77px;
-  margin: 4px 0 0 0;
+.photosList {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  overflow-y: auto;
 }
 
 .roundedBottomLeft {
@@ -64,18 +65,11 @@
   border-bottom-right-radius: 6px;
 }
 
-.photosList {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  overflow-y: auto;
-}
-
 .photo {
   width: 77px;
   height: 77px;
   object-fit: cover;
-  margin: 0 4px 4px 0;
+  margin: 0 0 4px 4px;
 }
 
 .emptyItem {

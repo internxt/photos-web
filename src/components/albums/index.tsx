@@ -30,7 +30,7 @@ const Albums = (props: AlbumProps) => {
 
       {
         albums.length > 0 ?
-          <div className={`list-group list-group-horizontal overflow-auto pl-3 pr-3`}>
+          <div className={`list-group list-group-horizontal overflow-auto ml-3 pl-3 pr-3 horizontal-scrollbar`}>
             {albums.map(album => (<AlbumCard album={album} key={album.id} database={props.database} photosToRender={props.photosToRender} />))}
           </div>
           :
