@@ -22,10 +22,11 @@ export const createObjectStore = async (tableNames: string[]) => {
   }
 }
 
-export const getValue = async (tableName: string, id: number | string, openedDataBase: IDBPDatabase<unknown>) => {
+export const getValue = async (tableName: string, id: IDBKeyRange | IDBValidKey, openedDataBase: IDBPDatabase<unknown>) => {
   const tx = openedDataBase.transaction(tableName, 'readonly')
   const store = tx.objectStore(tableName)
   const result = await store.get(id)
+  console.log(result, 'id:', id)
   return result
 }
 
@@ -37,10 +38,10 @@ export const getAllValues = async (tableName: string, openedDataBase: IDBPDataba
   return result
 }
 
-export const putValue = async (tableName: string, value: any, openedDataBase: IDBPDatabase<unknown>) => {
+export const putValue = async (tableName: string, value: any, primaryKey: IDBKeyRange | IDBValidKey | undefined, openedDataBase: IDBPDatabase<unknown>) => {
   const tx = openedDataBase.transaction(tableName, 'readwrite')
   const store = tx.objectStore(tableName)
-  const result = await store.put(value, value.previewId)
+  const result = await store.put(value, primaryKey)
   console.log('Put Data ', JSON.stringify(result))
   return result
 }

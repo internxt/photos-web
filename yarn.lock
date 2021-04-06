@@ -4429,6 +4429,11 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
+disable-scroll@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/disable-scroll/-/disable-scroll-0.6.0.tgz#ff0ae8d4c9d395e65842583eefb9313d046f462a"
+  integrity sha512-6bTAS16sz+3X7Pib8d5dAO9xo5MvqDZvSlzuhW/2c3NhUvbPNqnsV3JttvnqgNCDEgWUgNWJYM392iUmLETDxA==
+
 dns-equal@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/dns-equal/-/dns-equal-1.0.0.tgz#b39e7f1da6eb0a75ba9c17324b34753c47e0654d"
@@ -7131,6 +7136,11 @@ js-base64@^2.1.8:
   version "2.6.4"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.6.4.tgz#f4e686c5de1ea1f867dbcad3d46d969428df98c4"
   integrity sha512-pZe//GGmwJndub7ZghVHz7vjb2LgC1m8B07Au3eYqeqv9emhESByMXxaEgkUkEqJe87oBbSniGYoQNIBklc7IQ==
+
+js-file-download@^0.4.12:
+  version "0.4.12"
+  resolved "https://registry.yarnpkg.com/js-file-download/-/js-file-download-0.4.12.tgz#10c70ef362559a5b23cdbdc3bd6f399c3d91d821"
+  integrity sha512-rML+NkoD08p5Dllpjo0ffy4jRHeY6Zsapvr/W86N7E0yuzAO6qa5X9+xog6zQNlH102J7IXljNY2FtS6Lj3ucg==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"

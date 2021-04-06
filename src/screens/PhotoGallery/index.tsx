@@ -5,78 +5,19 @@ import Header from '../../layout/Header';
 import { getAllValues } from '../../lib/utils/indexedDB';
 import styles from './PhotoGallery.module.scss'
 import ActivityIndicator from '../../components/ActivityIndicator'
+import Photo from '../../components/Photo';
 
 interface PhotoGalleryProps {
-  dataBase: IDBPDatabase<unknown>
+  database: IDBPDatabase<unknown>
 }
-
-/* function setStatus(localPhotos: IHashedPhoto[], remotePhotos: IHashedPhoto[]) {
-  const localPhotodLabel = _.map(localPhotos, o => _.extend({ isLocal: true }, o))
-  const remotePhotosLabel = _.map(remotePhotos, o => _.extend({ isUploaded: true }, o))
-
-  const union = _.unionBy([...localPhotodLabel, ...remotePhotosLabel], (o) => {
-    const a = localPhotodLabel.find(id => id.hash === o.hash)
-    const b = remotePhotosLabel.find(id => id.hash === o.hash)
-
-    return _.merge(a, b)
-  })
-
-  return union;
-}
-
-async function checkExists(photos: IHashedPhoto[]) {
-  return async.filter(photos, (photo, nextPhoto) => {
-    RNFS.exists(photo.localUri).then((exists) => {
-      nextPhoto(null, exists);
-    }).catch((err) => nextPhoto(err));
-  })
-} */
 
 const PhotoGallery = (props: PhotoGalleryProps) => {
   const [isLoading, setIsLoading] = useState(true)
   const [photosToRender, setPhotosToRender] = useState<any[]>([])
-  const [uploadedPhotos, setUploadedPhotos] = useState<[]>([])
-  const [isDownloading, setIsDownloading] = useState(true)
   const [endCursor, setEndCursor] = useState<string | undefined>(undefined)
-
-  /*   const filteredPhotos = setStatus(localPhotos, uploadedPhotos); */
-
-  /* const loadLocalPhotos = (after?: string) => {
-    return getLocalImages(after).then(res => {
-      setLocalPhotos(after ? localPhotos.concat(res.assets) : res.assets)
-      setEndCursor(res.endCursor)
-      return res;
-    }).then(res => {
-      setIsLoading(false);
-      return res;
-    })
-  }
-
-  const loadUploadedPhotos = async () => {
-    setIsDownloading(true);
-    getPreviews((newPreview) => {
-      setUploadedPhotos(uploadedPhotos.concat([newPreview]))
-    }).then(res => {
-      checkExists(res).then(resExists => setUploadedPhotos(resExists))
-    }).then(() => {
-      setIsLoading(false)
-    }).catch(() => {
-    }).finally(() => {
-      setIsDownloading(false);
-    })
-  }
-
-  const loadPhotos = (after?: string) => {
-    return Promise.race([
-      loadLocalPhotos(after),
-      loadUploadedPhotos()
-    ])
-  } */
 
   useEffect(() => {
     openDB('test2').then(db => {
-      console.log('dataBase opened =>', db)
-
       // get all stored photos in the database on first render
       getAllValues('photos', db).then(photos => {
         return photos.map(photo => ({ ...photo, src: URL.createObjectURL(photo.blob) }))
@@ -99,10 +40,10 @@ const PhotoGallery = (props: PhotoGalleryProps) => {
           </span>
       </div>
 
-      <div className={`grid grid-cols-4 gap-4 my-4 mx-auto 1080:grid-cols-5 1280:grid-cols-6 1440:grid-cols-7 1920:grid-cols-8`}>
+      <div className={`grid grid-cols-4 gap-4 my-4 mx-auto 1080:grid-cols-5 1280:grid-cols-6 1440:grid-cols-7 1920:grid-cols-8 overflow-auto`}>
         {
           !isLoading ?
-            photosToRender.map(photo => <img className={`w-44 h-44 object-cover rounded-lg 1920:w-48 1920:h-48`} src={photo.src} key={photo.previewId} />)
+            photosToRender.map(photo => <Photo style={`w-44 h-44 object-cover rounded-lg hover:opacity-70 cursor-pointer 1920:w-48 1920:h-48`} photo={photo} isSelective={false} />)
             :
             null
         }

@@ -1,18 +1,20 @@
+import fileDownload from 'js-file-download';
+import { IRenderablePreview } from '../../lib/types/photos';
 import styles from './ImageViewer.module.scss'
-import { useEffect, useState } from 'react';
-import { IRenderablePreview } from '../AllPhotos';
 
 export interface ImageViewerProps {
   isHidden: boolean,
   handleClick: () => void,
-  photo: IRenderablePreview
+  handlePhotoDownload: () => void,
+  src: string
 }
  
 const ImageViewer = (props: ImageViewerProps) => {
 
   return (
     <div className={props.isHidden ? `${styles.hidden}` : `${styles.container}`} onClick={props.handleClick}>
-      <img src={props.photo.src} className={`${styles.photo}`} />
+      <img src={props.src} className={`${styles.photo}`} />
+      <span className={`${styles.download}`} onClick={props.handlePhotoDownload}>Download</span>
     </div>
   )
 }
